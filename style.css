@@ -1,0 +1,177 @@
+/* style.css */
+body {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: "Georgia", serif;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+p {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    text-indent: 30px;
+}
+
+#converter-form {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.note {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#converter-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+#input-file {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#keyboard-layout,
+#original-layout {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #43a047;
+}
+
+button:active {
+    background-color: #357a38;
+}
+
+form label,
+form textarea,
+form button {
+    display: block;
+    width: 100%;
+    margin: 0 0 20px 0;
+}
+
+form label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+form textarea {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #333;
+    padding: 10px;
+    border: none;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 auto;
+}
+
+th,
+td {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+th {
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+}
+
+a {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 8px;
+}
+
+a:hover {
+    color: #00F;
+    text-decoration: underline;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: left;
+}
+
+header h1 {
+    margin: 0;
+    color: white;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+header nav ul li a:hover {
+    color: lightgrey;
+}
