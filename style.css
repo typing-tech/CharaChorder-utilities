@@ -175,3 +175,7 @@ header nav ul li a {
 header nav ul li a:hover {
     color: lightgrey;
 }
+
+li {
+    text-align: left;
+}
