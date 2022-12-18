@@ -32,9 +32,11 @@
           <br />
         <label for="textarea">Text to analyze:</label><br>
         <textarea id="textarea" rows="10" cols="40"></textarea><br>
+        <label for="minReps">Enter a mininum frequency to filter the table by:</label><input id="minReps" type="number" value="5">
         <button type="button" onclick="findMissingChords()">Find Chords</button>
     </form>
     <div id="results"></div>
+    <div id="phrases"></div>
     <script type='text/javascript' src='missing.js'></script>
 
 </html>
