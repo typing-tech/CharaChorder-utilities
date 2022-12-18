@@ -15,7 +15,9 @@ function findMissingChords() {
         // Get the text from the textarea
         var text = document.getElementById("textarea").value;
         var counts = findUniqueWords(chords, text);
-        var sortedWords = counts.sortedWords;
+        var originalWords = counts.sortedWords;
+        let lemmatization = document.getElementById('lemmatization').checked;
+        var sortedWords = lemmatization ? lemmatizeDictionary(originalWords) : originalWords; // Lemmatize the words if they have checked the box
         var uniqueWordCount = counts.uniqueWordCount;
         var chordWordCount = counts.chordWordCount;
         const minRepsInput = document.getElementById('minReps');
@@ -232,3 +234,26 @@ function getPhraseFrequency(text, phraseLength, minRepetitions, chords) {
     return filteredPhraseFrequencyWithoutChords;
 }
 
+function lemmatizeDictionary(dict) {
+    const lemmaArray = [];
+
+    for (const [text, frequency] of dict) {
+        var doc = nlp(text)
+        doc.verbs().toInfinitive()
+        doc.nouns().toSingular()
+        const lemma = doc.out('text')
+        let found = false;
+        for (const [lemmaText, lemmaFrequency] of lemmaArray) {
+          if (lemmaText === lemma) {
+            const index = lemmaArray.findIndex(([text, frequency]) => text === lemmaText);
+            lemmaArray[index] = [lemmaText, lemmaFrequency + frequency];
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          lemmaArray.push([lemma, frequency]);
+        }
+      }
+    return lemmaArray;
+}
