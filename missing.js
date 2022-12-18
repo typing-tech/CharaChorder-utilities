@@ -163,8 +163,11 @@ function findUniqueWords(chords, text) {
 }
 
 function getPhraseFrequency(text, phraseLength, minRepetitions) {
+    // Replace all new line and tab characters with a space character
+    const textWithSpaces = text.replace(/[\n\t]/g, ' ');
+
     // Split the text into an array of words
-    const origWords = text.split(' ').map(word => word.replace(/[^\w\s]/g, ''));
+    const origWords = textWithSpaces.split(' ').map(word => word.replace(/[^\w\s]/g, ''));
     const words = origWords.map(word => word.toLowerCase());
 
     // Create a dictionary to store the phrases and their frequency
