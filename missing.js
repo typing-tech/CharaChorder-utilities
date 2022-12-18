@@ -24,7 +24,6 @@ function findMissingChords() {
         const minRepsInput = document.getElementById('minReps');
         const minReps = minRepsInput.value;
 
-
         var table = document.createElement("table");
         var head = document.createElement("thead");
         var body = document.createElement("tbody");
@@ -39,7 +38,7 @@ function findMissingChords() {
         headingRow.appendChild(frequencyHeading);
         head.appendChild(headingRow);
         for (var i = 0; i < sortedWords.length; i++) {
-            if(sortedWords[i][1] >= minReps) {
+            if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
                 var wordRow = document.createElement("tr");
                 var wordCell = document.createElement("td");
                 wordCell.textContent = sortedWords[i][0];
@@ -163,12 +162,17 @@ function findUniqueWords(chords, text) {
 }
 
 function getPhraseFrequency(text, phraseLength, minRepetitions) {
-    // Replace all new line and tab characters with a space character
-    const textWithSpaces = text.replace(/[\n\t]/g, ' ');
+    // Replace all new line and tab characters with a space character, and remove consecutive spaces
+    const textWithSpaces = text.replace(/[\n\t]/g, ' ').replace(/\s+/g, ' ');
 
     // Split the text into an array of words
     const origWords = textWithSpaces.split(' ').map(word => word.replace(/[^\w\s]/g, ''));
-    const words = origWords.map(word => word.toLowerCase());
+    const words = origWords
+        // Remove empty strings from the array
+        .filter(word => word.trim().length > 0)
+        // Convert all words to lower case
+        .map(word => word.toLowerCase());
+
 
     // Create a dictionary to store the phrases and their frequency
     const phraseFrequency = {};
@@ -178,16 +182,21 @@ function getPhraseFrequency(text, phraseLength, minRepetitions) {
         for (let j = 2; j <= phraseLength; j++) {
             // Get the current phrase by joining the next `j` words with a space character
             const phrase = words.slice(i, i + j).join(' ');
-            if (phrase.length <= words.length - i) {
-                // If the phrase is already in the dictionary, increment its frequency. Otherwise, add it to the dictionary with a frequency of 1.
-                if (phrase in phraseFrequency) {
-                    phraseFrequency[phrase]++;
-                } else {
-                    phraseFrequency[phrase] = 1;
+            // Check if the phrase fits within the bounds of the `words` array
+            if (i + j <= words.length) {
+                // Split the phrase into a list of words
+                const phraseWords = phrase.split(' ');
+                // Check if the phrase contains at least two words
+                if (phraseWords.length >= 2) {
+                    // If the phrase is already in the dictionary, increment its frequency. Otherwise, add it to the dictionary with a frequency of 1.
+                    if (phrase in phraseFrequency) {
+                        phraseFrequency[phrase]++;
+                    } else {
+                        phraseFrequency[phrase] = 1;
+                    }
                 }
             }
         }
-
     }
 
     // Sort the phrase frequency dictionary in descending order
