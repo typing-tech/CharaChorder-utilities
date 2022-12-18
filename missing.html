@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Missing Chords</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>CharaChorder Utilities</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="count.html">Count Bigrams</a></li>
+                <li><a href="convert.html">Convert Chord Map</a></li>
+                <li><a href="stats.html">Chord Stats</a></li>
+                <li><a href="missing.html">Missing Chords</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Missing Chords</h1>
+    <p>This utility helps you identify new chords. It analyzes text you paste in (some text from you, such as emails export or chat export or other writing)
+        and then shows you words in the text you haven't created chords for (based on the csv you give it). Note: your chord map never leaves your browser.
+    </p>
+    <form>
+        <label>
+            Chord CSV file
+            <input type="file" id="input-file" accept=".csv" />
+          </label>
+          <br />
+        <label for="textarea">Text to analyze:</label><br>
+        <textarea id="textarea" rows="10" cols="40"></textarea><br>
+        <button type="button" onclick="findMissingChords()">Find Chords</button>
+    </form>
+    <div id="results"></div>
+    <script type='text/javascript' src='missing.js'></script>
+
+</html>
