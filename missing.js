@@ -14,10 +14,8 @@ function findMissingChords() {
 
         // Get the text from the textarea
         var text = document.getElementById("textarea").value;
-        var counts = findUniqueWords(chords, text);
-        var originalWords = counts.sortedWords;
-        let lemmatization = document.getElementById('lemmatization').checked;
-        var sortedWords = lemmatization ? lemmatizeDictionary(originalWords) : originalWords; // Lemmatize the words if they have checked the box
+        var counts = findUniqueWords(chords, text, document.getElementById('lemmatization').checked);
+        var sortedWords = counts.sortedWords;
         var uniqueWordCount = counts.uniqueWordCount;
         var chordWordCount = counts.chordWordCount;
         const minRepsInput = document.getElementById('minReps');
@@ -107,7 +105,7 @@ function findMissingChords() {
     reader.readAsText(inputFile);
 }
 
-function findUniqueWords(chords, text) {
+function findUniqueWords(chords, text, lemmatize) {
     // Split the text into an array of words
     var words = text.split(/\s+/);
     words = words.filter(function (word) {
@@ -115,8 +113,14 @@ function findUniqueWords(chords, text) {
     });
     words.forEach(function (word, index) {
         words[index] = word.toLowerCase().replace(/[^\w\s]/g, '');
+        if (lemmatize) {
+            var doc = nlp(words[index])
+            doc.verbs().toInfinitive()
+            doc.nouns().toSingular()
+            const lemma = doc.out('text')
+            words[index] = lemma;
+        }
     });
-
     var wordCounts = {};
     var uniqueWordCount = 0;
     var chordWordCount = 0;
@@ -232,28 +236,4 @@ function getPhraseFrequency(text, phraseLength, minRepetitions, chords) {
         }, {});
 
     return filteredPhraseFrequencyWithoutChords;
-}
-
-function lemmatizeDictionary(dict) {
-    const lemmaArray = [];
-
-    for (const [text, frequency] of dict) {
-        var doc = nlp(text)
-        doc.verbs().toInfinitive()
-        doc.nouns().toSingular()
-        const lemma = doc.out('text')
-        let found = false;
-        for (const [lemmaText, lemmaFrequency] of lemmaArray) {
-          if (lemmaText === lemma) {
-            const index = lemmaArray.findIndex(([text, frequency]) => text === lemmaText);
-            lemmaArray[index] = [lemmaText, lemmaFrequency + frequency];
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          lemmaArray.push([lemma, frequency]);
-        }
-      }
-    return lemmaArray;
 }
