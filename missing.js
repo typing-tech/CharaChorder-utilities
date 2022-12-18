@@ -122,29 +122,39 @@ function findUniqueWords(chords, text) {
 
     // Count the number of times each word appears in the text
     for (var i = 0; i < words.length; i++) {
-        var word = words[i];
-        if (!(word in wordCounts)) {
-            wordCounts[word] = 1;
-            uniqueWordCount++;
-        } else {
-            wordCounts[word]++;
+        var word = words[i].trim();
+        if (word === "") {
+            continue;
+        }
+        if (word.length > 1) {
+            if (!(word in wordCounts)) {
+                wordCounts[word] = 1;
+                uniqueWordCount++;
+            } else {
+                wordCounts[word]++;
+            }
         }
     }
 
     // Create a dictionary of words that do not appear in the chords set
     var sortedWords = {};
     for (var i = 0; i < words.length; i++) {
-        var word = words[i];
-        if (!chords.has(word)) {
-            if (!(word in sortedWords)) {
-                sortedWords[word] = 1;
+        var word = words[i].trim();
+        if (word === "") {
+            continue;
+        }
+        if (word.length > 1) {
+            if (!chords.has(word)) {
+                if (!(word in sortedWords)) {
+                    sortedWords[word] = 1;
+                } else {
+                    sortedWords[word]++;
+                }
             } else {
-                sortedWords[word]++;
-            }
-        } else {
-            if (!(word in countedChords)) {
-                countedChords[word] = true;
-                chordWordCount++;
+                if (!(word in countedChords)) {
+                    countedChords[word] = true;
+                    chordWordCount++;
+                }
             }
         }
     }
