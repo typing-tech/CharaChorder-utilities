@@ -181,3 +181,15 @@ header nav ul li a:hover {
 li {
     text-align: left;
 }
+
+form label[for="minReps"] {
+    display: inline-block;
+    width: 600px; /* Adjust as needed */
+    text-align: right;
+    padding-right: 10px;
+  }
+  
+  #minReps {
+    display: inline-block;
+  }
+  

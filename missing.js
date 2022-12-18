@@ -14,9 +14,6 @@ function findMissingChords() {
 
         // Get the text from the textarea
         var text = document.getElementById("textarea").value;
-
-        var sortedWords = findUniqueWords(chords, text);
-
         var counts = findUniqueWords(chords, text);
         var sortedWords = counts.sortedWords;
         var uniqueWordCount = counts.uniqueWordCount;
@@ -53,7 +50,7 @@ function findMissingChords() {
         resultsDiv.innerHTML = `You have chords for ${chordWordCount} of the ${uniqueWordCount} unique words in the text (case insensitive). That is ${Math.round(chordWordCount / uniqueWordCount * 100)}%!`
         resultsDiv.appendChild(table);
 
-        var commonPhrases = getPhraseFrequency(text, 6, minReps)
+        var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
         // Get the element with id "phrases"
         const phrasesDiv = document.getElementById('phrases');
 
@@ -161,7 +158,7 @@ function findUniqueWords(chords, text) {
     };
 }
 
-function getPhraseFrequency(text, phraseLength, minRepetitions) {
+function getPhraseFrequency(text, phraseLength, minRepetitions, chords) {
     // Replace all new line and tab characters with a space character, and remove consecutive spaces
     const textWithSpaces = text.replace(/[\n\t]/g, ' ').replace(/\s+/g, ' ');
 
@@ -213,5 +210,15 @@ function getPhraseFrequency(text, phraseLength, minRepetitions) {
         }
     });
 
-    return filteredPhraseFrequency;
+    // Remove entries from the filtered phrase frequency object that are already in the chords set
+    const lowerCaseChords = new Set(Array.from(chords).map(phrase => phrase.trim().toLowerCase()));
+    const filteredPhraseFrequencyWithoutChords = Object.keys(filteredPhraseFrequency)
+        .filter(phrase => !lowerCaseChords.has(phrase))
+        .reduce((obj, phrase) => {
+            obj[phrase] = filteredPhraseFrequency[phrase];
+            return obj;
+        }, {});
+
+    return filteredPhraseFrequencyWithoutChords;
 }
+
