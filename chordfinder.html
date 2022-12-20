@@ -22,14 +22,17 @@
         </nav>
     </header>
     <h1>Missing Chords</h1>
-    <p>This utility helps you identify new chords. It analyzes text you paste in (some text from you, such as emails export or chat export or other writing)
-        and then shows you words in the text you haven't created chords for (based on the csv you give it). Note: your chord map never leaves your browser.  Also, because
-        processing is all done in your client performance could be heavily influenced by your computer. Long text may take a while to lemmatize.
+    <p>This utility helps you identify new chords. It analyzes text you paste in (some text from you, such as emails
+        export or chat export or other writing)
+        and then shows you words in the text you haven't created chords for (based on the csv you give it). Note: your
+        chord map never leaves your browser. Also, because
+        processing is all done in your client performance could be heavily influenced by your computer. Long text may
+        take a while to lemmatize.
     </p>
     <form>
         <label>
-          Chord CSV file
-          <input type="file" id="input-file" accept=".csv" />
+            Chord CSV file
+            <input type="file" id="input-file" accept=".csv" />
         </label>
         <br />
         <label for="textarea">Text to analyze:</label><br>
@@ -38,14 +41,15 @@
         <input id="minReps" type="number" value="5">
         <br />
         <label>
-          Attempt lemmatization of words?
-          <input type="checkbox" id="lemmatization" />
+            Attempt lemmatization of words?
+            <input type="checkbox" id="lemmatization" />
         </label>
         <br />
         <button type="button" onclick="findMissingChords()">Find Chords</button>
-      </form>      
+    </form>
     <div id="results"></div>
     <div id="phrases"></div>
     <script type='text/javascript' src='missing.js'></script>
+    <script type='text/javascript' src='downloadTable.js'></script>
 
 </html>

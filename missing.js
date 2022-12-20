@@ -1,108 +1,128 @@
+function calcStats(chords, csvPresent) {
+    // Get the text from the textarea
+    var text = document.getElementById("textarea").value;
+    var counts = findUniqueWords(chords, text, document.getElementById('lemmatization').checked);
+    var sortedWords = counts.sortedWords;
+    var uniqueWordCount = counts.uniqueWordCount;
+    var chordWordCount = counts.chordWordCount;
+    const minRepsInput = document.getElementById('minReps');
+    const minReps = minRepsInput.value;
+
+    var table = document.createElement("table");
+    var head = document.createElement("thead");
+    var body = document.createElement("tbody");
+    table.appendChild(head);
+    table.appendChild(body);
+    var headingRow = document.createElement("tr");
+    var wordHeading = document.createElement("th");
+    wordHeading.textContent = "Word";
+    var frequencyHeading = document.createElement("th");
+    frequencyHeading.textContent = "Frequency";
+    headingRow.appendChild(wordHeading);
+    headingRow.appendChild(frequencyHeading);
+    head.appendChild(headingRow);
+    for (var i = 0; i < sortedWords.length; i++) {
+        if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
+            var wordRow = document.createElement("tr");
+            var wordCell = document.createElement("td");
+            wordCell.textContent = sortedWords[i][0];
+            var frequencyCell = document.createElement("td");
+            frequencyCell.textContent = sortedWords[i][1];
+            wordRow.appendChild(wordCell);
+            wordRow.appendChild(frequencyCell);
+            body.appendChild(wordRow);
+        }
+    }
+    var resultsDiv = document.getElementById("results");
+    if (csvPresent) {
+        resultsDiv.innerHTML = `You have chords for ${chordWordCount} of the ${uniqueWordCount} unique words in the text (case insensitive). That is ${Math.round(chordWordCount / uniqueWordCount * 100)}%!`
+    }
+    else {
+        resultsDiv.innerHTML = "";
+    }
+    table.id = "wordTable";
+    resultsDiv.appendChild(table);
+    addCSVButton("wordTable", "Word Frequency");
+
+
+    var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
+    // Get the element with id "phrases"
+    const phrasesDiv = document.getElementById('phrases');
+
+    // Create a new table element
+    const table2 = document.createElement('table');
+
+    // Create a new row element for the header
+    const headerRow = document.createElement('tr');
+
+    // Create table header elements for the phrase and count columns
+    const phraseHeader = document.createElement('th');
+    phraseHeader.textContent = 'Phrase';
+
+    const countHeader = document.createElement('th');
+    countHeader.textContent = 'Frequency';
+
+    // Append the table header elements to the header row
+    headerRow.appendChild(phraseHeader);
+    headerRow.appendChild(countHeader);
+
+    // Append the header row to the table
+    table2.appendChild(headerRow);
+
+    // Iterate over the common phrases and add a row for each phrase
+    Object.keys(commonPhrases).forEach(phrase => {
+        // Create a new row element
+        const row = document.createElement('tr');
+
+        // Create a new cell element for the phrase
+        const phraseCell = document.createElement('td');
+        phraseCell.textContent = phrase;
+
+        // Create a new cell element for the frequency
+        const frequencyCell = document.createElement('td');
+        frequencyCell.textContent = commonPhrases[phrase];
+
+        // Append the cells to the row
+        row.appendChild(phraseCell);
+        row.appendChild(frequencyCell);
+
+        // Append the row to the table
+        table2.appendChild(row);
+    });
+
+    // Clear the contents of the phrases div
+    phrasesDiv.innerHTML = '';
+
+    // Append the table to the phrases div
+
+    table2.id = "phraseTable";
+    phrasesDiv.appendChild(table2);
+    addCSVButton("phraseTable", "Phrase Frequency");
+}
+
 function findMissingChords() {
+
     var inputFile = document.getElementById("input-file").files[0];
 
-    var reader = new FileReader();
-    reader.onload = function () {
-        var csvString = reader.result;
-        var rows = csvString.split("\n");
+    // check if inputFile is defined
+    if (inputFile) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var csvString = reader.result;
+            var rows = csvString.split("\n");
 
-        var chords = new Set();
-        for (var i = 0; i < rows.length; i++) {
-            var chord = rows[i].split(",")[1];
-            chords.add(chord);
-        }
-
-        // Get the text from the textarea
-        var text = document.getElementById("textarea").value;
-        var counts = findUniqueWords(chords, text, document.getElementById('lemmatization').checked);
-        var sortedWords = counts.sortedWords;
-        var uniqueWordCount = counts.uniqueWordCount;
-        var chordWordCount = counts.chordWordCount;
-        const minRepsInput = document.getElementById('minReps');
-        const minReps = minRepsInput.value;
-
-        var table = document.createElement("table");
-        var head = document.createElement("thead");
-        var body = document.createElement("tbody");
-        table.appendChild(head);
-        table.appendChild(body);
-        var headingRow = document.createElement("tr");
-        var wordHeading = document.createElement("th");
-        wordHeading.textContent = "Word";
-        var frequencyHeading = document.createElement("th");
-        frequencyHeading.textContent = "Frequency";
-        headingRow.appendChild(wordHeading);
-        headingRow.appendChild(frequencyHeading);
-        head.appendChild(headingRow);
-        for (var i = 0; i < sortedWords.length; i++) {
-            if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
-                var wordRow = document.createElement("tr");
-                var wordCell = document.createElement("td");
-                wordCell.textContent = sortedWords[i][0];
-                var frequencyCell = document.createElement("td");
-                frequencyCell.textContent = sortedWords[i][1];
-                wordRow.appendChild(wordCell);
-                wordRow.appendChild(frequencyCell);
-                body.appendChild(wordRow);
+            var chords = new Set();
+            for (var i = 0; i < rows.length; i++) {
+                var chord = rows[i].split(",")[1];
+                chords.add(chord);
             }
-        }
-        var resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = `You have chords for ${chordWordCount} of the ${uniqueWordCount} unique words in the text (case insensitive). That is ${Math.round(chordWordCount / uniqueWordCount * 100)}%!`
-        resultsDiv.appendChild(table);
-
-        var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
-        // Get the element with id "phrases"
-        const phrasesDiv = document.getElementById('phrases');
-
-        // Create a new table element
-        const table2 = document.createElement('table');
-
-        // Create a new row element for the header
-        const headerRow = document.createElement('tr');
-
-        // Create table header elements for the phrase and count columns
-        const phraseHeader = document.createElement('th');
-        phraseHeader.textContent = 'Phrase';
-
-        const countHeader = document.createElement('th');
-        countHeader.textContent = 'Frequency';
-
-        // Append the table header elements to the header row
-        headerRow.appendChild(phraseHeader);
-        headerRow.appendChild(countHeader);
-
-        // Append the header row to the table
-        table2.appendChild(headerRow);
-
-        // Iterate over the common phrases and add a row for each phrase
-        Object.keys(commonPhrases).forEach(phrase => {
-            // Create a new row element
-            const row = document.createElement('tr');
-
-            // Create a new cell element for the phrase
-            const phraseCell = document.createElement('td');
-            phraseCell.textContent = phrase;
-
-            // Create a new cell element for the frequency
-            const frequencyCell = document.createElement('td');
-            frequencyCell.textContent = commonPhrases[phrase];
-
-            // Append the cells to the row
-            row.appendChild(phraseCell);
-            row.appendChild(frequencyCell);
-
-            // Append the row to the table
-            table2.appendChild(row);
-        });
-
-        // Clear the contents of the phrases div
-        phrasesDiv.innerHTML = '';
-
-        // Append the table to the phrases div
-        phrasesDiv.appendChild(table2);
-
-    };
-    reader.readAsText(inputFile);
+            calcStats(chords, true);
+        };
+        reader.readAsText(inputFile);
+    } else {
+        // inputFile is not defined, so call calcStats with an empty set
+        calcStats(new Set(), false);
+    }
 }
 
 function findUniqueWords(chords, text, lemmatize) {
