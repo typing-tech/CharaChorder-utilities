@@ -1,7 +1,7 @@
-function calcStats(chords, csvPresent) {
+async function calcStats(chords, csvPresent) {
     // Get the text from the textarea
     var text = document.getElementById("textarea").value;
-    var counts = findUniqueWords(chords, text, document.getElementById('lemmatization').checked);
+    var counts = await findUniqueWords(chords, text, document.getElementById('lemmatization').checked);
     var sortedWords = counts.sortedWords;
     var uniqueWordCount = counts.uniqueWordCount;
     var chordWordCount = counts.chordWordCount;
@@ -126,22 +126,25 @@ function findMissingChords() {
     }
 }
 
-function findUniqueWords(chords, text, lemmatize) {
-    // Split the text into an array of words
-    var words = text.split(/\s+/);
-    words = words.filter(function (word) {
-        return word !== '';
-    });
-    words.forEach(function (word, index) {
-        words[index] = word.toLowerCase().replace(/[^\w\s]/g, '');
+async function processWords(words, lemmatize) {
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i].toLowerCase().replace(/[^\w\s]/g, '');
         if (lemmatize) {
-            var doc = nlp(words[index])
+            const doc = nlp(words[i])
             doc.verbs().toInfinitive()
             doc.nouns().toSingular()
             const lemma = doc.out('text')
-            words[index] = lemma;
+            words[i] = lemma;
         }
-    });
+    }
+    return words;
+}
+
+async function findUniqueWords(chords, text, lemmatize) {
+    // Split the text into an array of words
+    var words = text.split(/\s+/);
+    words = await processWords(words, lemmatize);
+
     var wordCounts = {};
     var uniqueWordCount = 0;
     var chordWordCount = 0;
