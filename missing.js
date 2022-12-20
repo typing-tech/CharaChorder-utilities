@@ -34,11 +34,12 @@ function calcStats(chords, csvPresent) {
         }
     }
     var resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = '<a href="#phrases">Jump to Phrases Section</a></br>';
     if (csvPresent) {
-        resultsDiv.innerHTML = `You have chords for ${chordWordCount} of the ${uniqueWordCount} unique words in the text (case insensitive). That is ${Math.round(chordWordCount / uniqueWordCount * 100)}%!`
+        resultsDiv.innerHTML += `You have chords for ${chordWordCount} of the ${uniqueWordCount} unique words in the text (case insensitive). That is ${Math.round(chordWordCount / uniqueWordCount * 100)}%!`
     }
     else {
-        resultsDiv.innerHTML = "";
+        resultsDiv.innerHTML += `There are ${uniqueWordCount} unique words in the text (case insensitive).`;
     }
     table.id = "wordTable";
     resultsDiv.appendChild(table);
@@ -91,7 +92,7 @@ function calcStats(chords, csvPresent) {
     });
 
     // Clear the contents of the phrases div
-    phrasesDiv.innerHTML = '';
+    phrasesDiv.innerHTML = '<a href="#results">Jump to Word Section</a></br>';
 
     // Append the table to the phrases div
 
