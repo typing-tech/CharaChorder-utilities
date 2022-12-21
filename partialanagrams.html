@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Calculate Bigram Frequency</title>
+    <title>Partial Anagrams</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -21,23 +21,18 @@
             </ul>
         </nav>
     </header>
-    <h1>Calculate Bigram Frequency</h1>
-    <p>On your CharaChorder device you may want to choose uncommon bigrams when using 2 letter chords to avoid
-        accidentally
-        triggering them when you are using chentry (character entry). You can use this form to analyze some text and
-        find the
-        count of all the bigram pairs (since the order doesn't matter when it comes to chording).
-    </p>
-    <p>
-        You can sort the table by clicking on the header.
+    <h1>Partial Anagrams</h1>
+    <p>This utility helps you find partial anagrams which are often the chords you need to pay attention to because they
+        share the same unique letters (for example: tough, though, and thought).  Often you can use the Dup key to distinguish these, or some other mnemonic (tuf for tough).
     </p>
     <form>
         <label for="textarea">Text to analyze:</label><br>
         <textarea id="textarea" rows="10" cols="40"></textarea><br>
-        <button type="button" onclick="calculateBigrams(true)">Show Bigrams Count Table</button>
-        <button type="button" onclick="createFrequencyTable()">Show Frequency Table</button>
+        <br />
+        <button type="button" onclick="createPartialAnagramTable('results')">Find Partial Anagrams</button>
     </form>
-    <div id="bigram-counts-div"></div>
-    <script type='text/javascript' src='js/count.js'></script>
+    <div id="results"></div>
+    <script type='text/javascript' src='js/partial.js'></script>
+    <script type='text/javascript' src='js/downloadTable.js'></script>
 
 </html>

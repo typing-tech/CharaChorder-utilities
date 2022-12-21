@@ -1,3 +1,10 @@
+/**
+* Calculate statistics on the given chords and text, and display the results in the HTML page.
+*
+* @param {Array} chords - An array of chords, where each chord is a string.
+* @param {boolean} csvPresent - A boolean indicating whether the chords are present in the text.
+* @return {void} None. The function updates the innerHTML of the "results" and "phrases" elements in the HTML page.
+*/
 async function calcStats(chords, csvPresent) {
     // Get the text from the textarea
     var text = document.getElementById("textarea").value;
@@ -38,13 +45,19 @@ async function calcStats(chords, csvPresent) {
         tableString += `<tr><td>${phrase}</td><td>${commonPhrases[phrase]}</td></tr>`;
     });
     tableString += '</tbody></table>';
-    
+
     // Get the element with id "phrases" and update its innerHTML
     const phrasesDiv = document.getElementById('phrases');
     phrasesDiv.innerHTML = '<a href="#results">Jump to Word Section</a></br>' + tableString;
     addCSVButton("phraseTable", "Phrase Frequency");
 }
 
+/**
+* Find missing chords in the text by reading them from an input CSV file.
+*
+* @param {void}
+* @return {void} None. The function calls the `calcStats` function with the chords read from the input file, or with an empty set if the input file is not defined.
+*/
 function findMissingChords() {
 
     var inputFile = document.getElementById("input-file").files[0];
@@ -70,6 +83,14 @@ function findMissingChords() {
     }
 }
 
+/**
+* Process a list of words by lowercasing and removing punctuation, and optionally lemmatizing them.
+*
+* @param {Array} words - An array of strings representing the words to be processed.
+* @param {boolean} lemmatize - A boolean indicating whether to lemmatize the words.
+* @return {Array} An array of strings representing the processed words.
+*/
+
 async function processWords(words, lemmatize) {
     for (let i = 0; i < words.length; i++) {
         words[i] = words[i].toLowerCase().replace(/[^\w\s]/g, '');
@@ -84,6 +105,18 @@ async function processWords(words, lemmatize) {
     return words;
 }
 
+/**
+* Find the unique words in a given text and count their frequencies, filtering out words that appear in the given chords set.
+* Optionally lemmatize the words.
+*
+* @param {Set} chords - A set of chords, where each chord is a string.
+* @param {string} text - The input text to search for unique words.
+* @param {boolean} lemmatize - A boolean indicating whether to lemmatize the words.
+* @return {Object} An object with the following properties:
+*                  - sortedWords: An array of arrays, where each inner array represents a unique word and its frequency, sorted in descending order by frequency.
+*                  - uniqueWordCount: The total number of unique words in the text.
+*                  - chordWordCount: The number of unique words in the text that also appear in the chords set.
+*/
 async function findUniqueWords(chords, text, lemmatize) {
     // Split the text into an array of words
     var words = text.split(/\s+/);
@@ -142,6 +175,15 @@ async function findUniqueWords(chords, text, lemmatize) {
     };
 }
 
+/**
+* Find the frequency of phrases in a given text, with a specified maximum length and minimum number of repetitions, and filter out phrases that appear in the given chords set.
+*
+* @param {string} text - The input text to search for phrases.
+* @param {number} phraseLength - The maximum length of a phrase, in number of words.
+* @param {number} minRepetitions - The minimum number of repetitions for a phrase to be included in the results.
+* @param {Set} chords - A set of chords, where each chord is a string.
+* @return {Object} A dictionary of phrases and their frequency, sorted in descending order by frequency and filtered by the minimum number of repetitions and the presence in the chords set.
+*/
 function getPhraseFrequency(text, phraseLength, minRepetitions, chords) {
     // Replace all new line and tab characters with a space character, and remove consecutive spaces
     const textWithSpaces = text.replace(/[\n\t]/g, ' ').replace(/\s+/g, ' ');
