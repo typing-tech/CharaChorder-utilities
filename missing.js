@@ -8,31 +8,16 @@ async function calcStats(chords, csvPresent) {
     const minRepsInput = document.getElementById('minReps');
     const minReps = minRepsInput.value;
 
-    var table = document.createElement("table");
-    var head = document.createElement("thead");
-    var body = document.createElement("tbody");
-    table.appendChild(head);
-    table.appendChild(body);
-    var headingRow = document.createElement("tr");
-    var wordHeading = document.createElement("th");
-    wordHeading.textContent = "Word";
-    var frequencyHeading = document.createElement("th");
-    frequencyHeading.textContent = "Frequency";
-    headingRow.appendChild(wordHeading);
-    headingRow.appendChild(frequencyHeading);
-    head.appendChild(headingRow);
+    // Build up the table in memory as a string
+    var tableString = '<table id="wordTable"><thead><tr><th>Word</th><th>Frequency</th></tr></thead><tbody>';
     for (var i = 0; i < sortedWords.length; i++) {
         if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
-            var wordRow = document.createElement("tr");
-            var wordCell = document.createElement("td");
-            wordCell.textContent = sortedWords[i][0];
-            var frequencyCell = document.createElement("td");
-            frequencyCell.textContent = sortedWords[i][1];
-            wordRow.appendChild(wordCell);
-            wordRow.appendChild(frequencyCell);
-            body.appendChild(wordRow);
+            tableString += `<tr><td>${sortedWords[i][0]}</td><td>${sortedWords[i][1]}</td></tr>`;
         }
     }
+    tableString += '</tbody></table>';
+
+    // Get the element with id "results" and update its innerHTML
     var resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = '<a href="#phrases">Jump to Phrases Section</a></br>';
     if (csvPresent) {
@@ -41,63 +26,22 @@ async function calcStats(chords, csvPresent) {
     else {
         resultsDiv.innerHTML += `There are ${uniqueWordCount} unique words in the text (case insensitive).`;
     }
-    table.id = "wordTable";
-    resultsDiv.appendChild(table);
+    resultsDiv.innerHTML += tableString;
     addCSVButton("wordTable", "Word Frequency");
 
 
     var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
-    // Get the element with id "phrases"
-    const phrasesDiv = document.getElementById('phrases');
 
-    // Create a new table element
-    const table2 = document.createElement('table');
-
-    // Create a new row element for the header
-    const headerRow = document.createElement('tr');
-
-    // Create table header elements for the phrase and count columns
-    const phraseHeader = document.createElement('th');
-    phraseHeader.textContent = 'Phrase';
-
-    const countHeader = document.createElement('th');
-    countHeader.textContent = 'Frequency';
-
-    // Append the table header elements to the header row
-    headerRow.appendChild(phraseHeader);
-    headerRow.appendChild(countHeader);
-
-    // Append the header row to the table
-    table2.appendChild(headerRow);
-
-    // Iterate over the common phrases and add a row for each phrase
+    // Build up the table in memory as a string
+    var tableString = '<table id="phraseTable"><thead><tr><th>Phrase</th><th>Frequency</th></tr></thead><tbody>';
     Object.keys(commonPhrases).forEach(phrase => {
-        // Create a new row element
-        const row = document.createElement('tr');
-
-        // Create a new cell element for the phrase
-        const phraseCell = document.createElement('td');
-        phraseCell.textContent = phrase;
-
-        // Create a new cell element for the frequency
-        const frequencyCell = document.createElement('td');
-        frequencyCell.textContent = commonPhrases[phrase];
-
-        // Append the cells to the row
-        row.appendChild(phraseCell);
-        row.appendChild(frequencyCell);
-
-        // Append the row to the table
-        table2.appendChild(row);
+        tableString += `<tr><td>${phrase}</td><td>${commonPhrases[phrase]}</td></tr>`;
     });
-
-    // Clear the contents of the phrases div
-    phrasesDiv.innerHTML = '<a href="#results">Jump to Word Section</a></br>';
-
-    // Append the table to the phrases div
-
-    table2.id = "phraseTable";
-    phrasesDiv.appendChild(table2);
+    tableString += '</tbody></table>';
+    
+    // Get the element with id "phrases" and update its innerHTML
+    const phrasesDiv = document.getElementById('phrases');
+    phrasesDiv.innerHTML = '<a href="#results">Jump to Word Section</a></br>' + tableString;
     addCSVButton("phraseTable", "Phrase Frequency");
 }
 
