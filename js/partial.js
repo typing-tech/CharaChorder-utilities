@@ -11,10 +11,24 @@ function createPartialAnagramTable(divId) {
     const pairs = findPartialAnagrams(inputString);
 
     // Build up the HTML table as a string
-    let table = '<table id="anagramsTable"><thead><tr><th>Anagrams</th></tr></thead><tbody>';
+    let table = '<table id="anagramsTable"><thead><tr><th>Anagrams - Word (Count)</th></tr></thead><tbody>';
     for (const pair of pairs) {
         table += '<tr>';
-        const words = pair.join(', ');
+        var wordsAndFrequencies = [];
+        for (let i = 0; i < pair.length; i++) {
+            var word = pair[i];
+            var count = countWordOccurrences(inputString, word);
+            wordsAndFrequencies.push(word + " (" + count + ")")
+        }
+        // Sort the wordsAndFrequencies array in descending order by count
+        wordsAndFrequencies.sort(function(a, b) {
+            // Use regular expressions to extract the count from each element
+            const countA = a.match(/\(([^)]+)\)/)[1];
+            const countB = b.match(/\(([^)]+)\)/)[1];
+            // Compare the counts and return the result
+            return countB - countA;
+        });
+        const words = wordsAndFrequencies.join(', ');
         table += `<td>${words}</td>`;
         table += '</tr>';
     }
@@ -26,14 +40,15 @@ function createPartialAnagramTable(divId) {
     addCSVButton("anagramsTable", "Partial Anagrams");
 }
 
-/**
-* Finds all partial anagram pairs in a given string.
-*
-* @param {string} inputString - The input string to search for partial anagram pairs.
-* @return {Array} An array of partial anagram pairs. Each pair is represented as an array of two strings.
-*/
-function findPartialAnagrams(inputString) {
 
+
+/**
+* Clean a given string by replacing new line and tab characters with spaces, removing consecutive spaces, and lowercasing and removing punctuation from the words.
+*
+* @param {string} inputString - The input string to be cleaned.
+* @return {Array} An array of strings representing the cleaned words in the input string.
+*/
+function getCleanWordsFromString(inputString) {
     // Replace all new line and tab characters with a space character, and remove consecutive spaces
     const textWithSpaces = inputString.replace(/[\n\t]/g, ' ').replace(/\s+/g, ' ');
 
@@ -44,6 +59,17 @@ function findPartialAnagrams(inputString) {
         .filter(word => word.trim().length > 0)
         // Convert all words to lower case
         .map(word => word.toLowerCase());
+    return words;
+}
+
+/**
+* Finds all partial anagram pairs in a given string.
+*
+* @param {string} inputString - The input string to search for partial anagram pairs.
+* @return {Array} An array of partial anagram matches
+*/
+function findPartialAnagrams(inputString) {
+    const words = getCleanWordsFromString(inputString);
 
     // Initialize an empty array to store the result
     const result = [];
@@ -96,4 +122,22 @@ function findPartialAnagrams(inputString) {
     // Sort the result array by the largest list of partial anagrams first
     result.sort((a, b) => b.length - a.length);
     return result;
+}
+
+/**
+* Count the number of occurrences of a given word in a given text.
+*
+* @param {string} textInput - The input text to search for the word.
+* @param {string} word - The word to search for in the text.
+* @return {number} The number of occurrences of the word in the text.
+*/
+function countWordOccurrences(textInput, word) {
+    var words = getCleanWordsFromString(textInput);
+    let count = 0;
+    for (let i = 0; i < words.length; i++) {
+        if (words[i] === word) {
+            count++;
+        }
+    }
+    return count;
 }

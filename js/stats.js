@@ -47,7 +47,7 @@ document.getElementById("calculateStats").addEventListener("click", function () 
             })
         });
 
-        var summaryTable = "<table><tr><th>Chord Lengths</th><th>Count</th></tr>";
+        var summaryTable = "<table id='chordLengths'><tr><th>Chord Lengths</th><th>Count</th></tr>";
         for (var length in lengthCounts) {
             summaryTable += "<tr><td>" + length + " key chord" + "</td><td>" + lengthCounts[length] + "</td></tr>";
         }
@@ -55,7 +55,7 @@ document.getElementById("calculateStats").addEventListener("click", function () 
 
         // Calculate frequencies of letters/keys used
         var sortedLettersCounts = Object.entries(lettersCounts).sort((a, b) => b[1] - a[1]);
-        var wordFrequencyTable = "<table><tr><th>Letter/Key</th><th>Count</th></tr>";
+        var wordFrequencyTable = "<table id='letterCounts'><tr><th>Letter/Key</th><th>Count</th></tr>";
         
         // Use an object to store words with the same count
         var countToWords = {};
@@ -92,7 +92,9 @@ document.getElementById("calculateStats").addEventListener("click", function () 
         
         var uniquechordMapsCount = Object.keys(chordMapCounts).length;
         document.getElementById("stats").innerHTML = "Number of chords: " + rows.length + "<br>Number of unique words chorded: "  + uniquechordMapsCount + 
-        "<br>Duplicate words: "+dupWords.join(', ') + "<br><br>" + summaryTable + "<br>" + wordFrequencyTable;
+        "<br><br>" + summaryTable + "<br>" + wordFrequencyTable + "<br>Duplicate words: "+dupWords.join(', ');
+        addCSVButton("letterCounts", "Letter Counts");
+        addCSVButton("chordLengths", "Chord Lengths");
     };
 
     reader.readAsText(inputFile);

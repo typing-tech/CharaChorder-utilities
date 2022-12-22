@@ -2,7 +2,7 @@
 * Calculate statistics on the given chords and text, and display the results in the HTML page.
 *
 * @param {Array} chords - An array of chords, where each chord is a string.
-* @param {boolean} csvPresent - A boolean indicating whether the chords are present in the text.
+* @param {boolean} csvPresent - A boolean indicating whether the chord csv file is present
 * @return {void} None. The function updates the innerHTML of the "results" and "phrases" elements in the HTML page.
 */
 async function calcStats(chords, csvPresent) {

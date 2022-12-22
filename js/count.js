@@ -98,89 +98,30 @@ function calculateBigrams(renderTable) {
         }
     }
 
-    // create an HTML table element
-    var table = document.createElement('table');
-    table.setAttribute("id", "bigramtable");
-
-    // create a table header row
-    var thead = document.createElement('thead');
-
-    // create a table header cell for the "Bigram" column
-    var tableHeader1 = document.createElement('th');
-    tableHeader1.appendChild(document.createTextNode("Bigram Pair"));
-    thead.appendChild(tableHeader1);
-
-    // create a table header cell for the "Count" column
-    var tableHeader2 = document.createElement('th');
-    tableHeader2.appendChild(document.createTextNode("Count \u2195"));
-    thead.appendChild(tableHeader2);
-
-    // add the table header row to the table
-    table.appendChild(thead);
-
-    // create a table body
-    var tbody = document.createElement('tbody');
-    table.appendChild(tbody);
+    var table = "<table id='bigramtable'><thead><tr><th>Bigram Pair</th><th>Count \u2195</th></tr></thead><tbody>";
 
     // loop through the properties of the bigramCounts object
     for (var bigram in bigramCounts) {
-        // create a new row for each property
-        var row = document.createElement('tr');
-
-        // create a cell for the bigram
-        var bigramCell = document.createElement('td');
-        bigramCell.innerHTML = bigram;
-        row.appendChild(bigramCell);
-
-        // create a cell for the count
-        var countCell = document.createElement('td');
-        countCell.innerHTML = bigramCounts[bigram];
-        row.appendChild(countCell);
-
-        // add the row to the table
-        tbody.appendChild(row);
+        table += "<tr><td>" + bigram + "</td><td>" + bigramCounts[bigram] + "</td></tr>"
     }
+    table += '</tbody></table>';
 
     var div = document.getElementById("bigram-counts-div")
     // add the table to the div element
     div.innerHTML = '';
-    var wordElement = document.createElement('p');
-    wordElement.innerHTML = "Words analyzed: " + wordCount;
-    div.appendChild(wordElement);
+    div.innerHTML += `<p>Words analyzed:  ${wordCount}</p><p>Unique words analyzed: ${uniqueWords.length}</p>`;
 
-    var wordUniqueElement = document.createElement('p');
-    wordUniqueElement.innerHTML = "Unique words analyzed: " + uniqueWords.length;
-    div.appendChild(wordUniqueElement);
-
-    // create a CSV string from the bigramCounts object
-    var csv = 'Bigram Pair,Count\n';
-    for (var bigram in bigramCounts) {
-        csv += '"' + bigram + '",' + bigramCounts[bigram] + '\n';
-    }
-
-    // create a link element
-    var link = document.createElement('a');
-
-    // set the link's href attribute to the CSV string
-    link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-
-    // set the link's download attribute to a file name
-    link.download = 'bigram_counts.csv';
-
-    // set the link's text
-    link.innerHTML = 'Download counts (csv)';
-
-    // append the link to the page
-    div.appendChild(link);
     if (renderTable) {
-        div.appendChild(table);
+        div.innerHTML += table;
+        // Get all the column headers in the table
+        var headers = document.getElementById('bigramtable').getElementsByTagName("th");
+        headers[1].addEventListener("click", function (event) {
+            // Then sort the table by calling the sortTable function
+            sortTable("bigramtable", 1);
+        });
+        addCSVButton("bigramtable", "Bigram Counts");
     }
-    // Get all the column headers in the table
-    var headers = table.getElementsByTagName("th");
-    headers[1].addEventListener("click", function (event) {
-        // Then sort the table by calling the sortTable function
-        sortTable("bigramtable", 1);
-    });
+
     return bigramCounts;
 }
 
@@ -227,7 +168,7 @@ function createFrequencyTable() {
     }
 
     // Create the html string
-    var html = "<table>";
+    var html = "<table id='bigramFrequencies'><thead>";
 
     // Create the header row
     html += "<tr>";
@@ -235,7 +176,7 @@ function createFrequencyTable() {
     for (var i = 0; i < 26; i++) {
         html += "<th>" + String.fromCharCode(65 + i) + "</th>";
     }
-    html += "</tr>";
+    html += "</tr></thead><tbody>";
 
     // Create the data rows
     for (var i = 0; i < 26; i++) {
@@ -252,21 +193,20 @@ function createFrequencyTable() {
             const bgColor = `rgb(${255 - normalizedVal}, ${255 - normalizedVal}, ${255 - normalizedVal})`;
             // Set the text color to white if the background color is close to black
             let textColor = "black";
-            if (normalizedVal > 255/2) {
-              textColor = "white";
+            if (normalizedVal > 255 / 2) {
+                textColor = "white";
             }
             // Create the td element and set its background color
             html += `<td style="background-color: ${bgColor}; color: ${textColor}">${percentage}</td>`;
         }
-    
+
         html += "</tr>";
     }
-    
+
 
 
     // Close the table
-    html += "</table>";
-    var tab = document.createElement("table");
-    tab.innerHTML = html;
-    div.appendChild(tab)
+    html += "</tbody></table>";
+    div.innerHTML += html;
+    addCSVButton("bigramFrequencies", "Bigram Frequencies");
 }
