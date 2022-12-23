@@ -159,7 +159,7 @@ function generateBannerContent(numChords, numUniqueChords, lengthCounts) {
     // Set the chart area width and height
     const chartWidth = 125;
     const chartHeight = 25;
-    const labelHeight = 20; // height of the label area below the chart
+    const labelHeight = 10; // height of the label area below the chart
     const columnSpacing = 2; // space between columns
 
     // Calculate the maximum count value
@@ -172,19 +172,20 @@ function generateBannerContent(numChords, numUniqueChords, lengthCounts) {
     let xPos = 50;
     let yPos = canvas.height-50;
 
+    ctx.font = "12px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
     // Iterate through the counts and draw the columns
     for (let i = 0; i < counts.length; i++) {
         // Calculate the column height based on the count value and the maximum count
         const columnHeight = (counts[i] / maxCount) * chartHeight;
 
-        // Set the fill style for the column
-        ctx.fillStyle = "white";
-
         // Draw the column
         ctx.fillRect(xPos, yPos - columnHeight, columnWidth, columnHeight);
 
         // Draw the label below the column
-        ctx.textAlign = "top";
         ctx.fillText(xAxis[i], xPos + columnWidth / 2, yPos + labelHeight / 2);
 
         // Increment the x position for the next column
