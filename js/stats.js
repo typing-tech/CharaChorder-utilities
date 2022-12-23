@@ -91,8 +91,8 @@ document.getElementById("calculateStats").addEventListener("click", function () 
 
 
         var uniquechordMapsCount = Object.keys(chordMapCounts).length;
-        document.getElementById("stats").innerHTML = "<a href='#' id='downloadBanner'>Download Discord banner</a><br>" + "Number of chords: " + rows.length + "<br>Number of unique words chorded: " + uniquechordMapsCount +
-            "<br><br>" + summaryTable + "<br>" + wordFrequencyTable + "<br>Duplicate words: " + dupWords.join(', ');
+        document.getElementById("stats").innerHTML = "<button id='downloadBanner' type='button' style='margin-top:5px'>Download Discord banner</button><h3>Statistics</h3>" + "Number of chords: " + rows.length + "<br>Number of unique words chorded: " + uniquechordMapsCount +
+            "<br>" + summaryTable + "<br>" + wordFrequencyTable + "<br>Duplicate words: " + dupWords.join(', ');
         addCSVButton("letterCounts", "Letter Counts");
         addCSVButton("chordLengths", "Chord Lengths");
         document.getElementById("downloadBanner").addEventListener("click", function () {
@@ -169,14 +169,15 @@ function generateBannerContent(numChords, numUniqueChords, lengthCounts) {
     const columnWidth = (chartWidth - (counts.length - 1) * columnSpacing) / counts.length;
 
     // Set the starting x and y positions for the columns
-    let xPos = 50;
+    let xPos = 100;
     let yPos = canvas.height-50;
 
     ctx.font = "12px monospace";
     ctx.fillStyle = "white";
-    ctx.textAlign = "center";
+    ctx.textAlign = "left";
     ctx.textBaseline = "top";
-
+    ctx.fillText("Chord length", 5, yPos + labelHeight / 2);
+    ctx.textAlign = "center";
     // Iterate through the counts and draw the columns
     for (let i = 0; i < counts.length; i++) {
         // Calculate the column height based on the count value and the maximum count
