@@ -8,7 +8,7 @@ Welcome to the CharaChorder Utilities project! This project contains a set of to
 - ChordFinder: a tool that looks at your uploaded chord map and a text and finds common words and phrases in the text that you don't have chords for.
 - Anagrams: this tool looks at a text and identifies all of the partial anagrams. Partial anagrams (like tough and thought) are usually words that you need special attention for choosing chord maps since they share the same overall letters.
 
-You can access the CharaChorder Utilities [here](https://jdestgermain.github.io/CharaChorder-utilities/).
+You can access the CharaChorder Utilities [here](https://typing-tech.github.io/CharaChorder-utilities/).
 
 ## Reporting issues
 
