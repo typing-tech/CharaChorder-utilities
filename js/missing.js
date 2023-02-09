@@ -16,7 +16,7 @@ async function calcStats(chords, csvPresent) {
     const minReps = minRepsInput.value;
 
     // Build up the table in memory as a string
-    var tableString = '<table id="wordTable"><thead><tr><th>Word</th><th>Frequency</th><th>Score</th></tr></thead><tbody>';
+    var tableString = '<table id="wordTable"><thead><tr><th>Word</th><th>Frequency \u2195</th><th>Score \u2195</th></tr></thead><tbody>';
     for (var i = 0; i < sortedWords.length; i++) {
         if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
             tableString += `<tr><td>${sortedWords[i][0]}</td><td>${sortedWords[i][1]}</td><td>${sortedWords[i][0].length*Number(sortedWords[i][1])}</td></tr>`;
@@ -40,7 +40,7 @@ async function calcStats(chords, csvPresent) {
     var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
 
     // Build up the table in memory as a string
-    var tableString = '<table id="phraseTable"><thead><tr><th>Phrase</th><th>Frequency</th><th>Score</th></tr></thead><tbody>';
+    var tableString = '<table id="phraseTable"><thead><tr><th>Phrase</th><th>Frequency \u2195</th><th>Score \u2195</th></tr></thead><tbody>';
     Object.keys(commonPhrases).forEach(phrase => {
         tableString += `<tr><td>${phrase}</td><td>${commonPhrases[phrase]}</td><td>${phrase.length*Number(commonPhrases[phrase])}</td></tr>`;
     });
@@ -50,6 +50,21 @@ async function calcStats(chords, csvPresent) {
     const phrasesDiv = document.getElementById('phrases');
     phrasesDiv.innerHTML = '<a href="#results">Jump to Word Section</a></br>' + tableString;
     addCSVButton("phraseTable", "Phrase Frequency");
+
+    var headers = document.getElementById('results').getElementsByTagName("th");
+    headers[1].addEventListener("click", function (event) {
+        sortTable("results", 1);
+    });
+    headers[2].addEventListener("click", function (event) {
+        sortTable("results", 2);
+    });
+    var headers2 = document.getElementById('phrases').getElementsByTagName("th");
+    headers2[1].addEventListener("click", function (event) {
+        sortTable("phrases", 1);
+    });
+    headers2[2].addEventListener("click", function (event) {
+        sortTable("phrases", 2);
+    });
 }
 
 /**
