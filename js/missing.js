@@ -16,10 +16,10 @@ async function calcStats(chords, csvPresent) {
     const minReps = minRepsInput.value;
 
     // Build up the table in memory as a string
-    var tableString = '<table id="wordTable"><thead><tr><th>Word</th><th>Frequency</th></tr></thead><tbody>';
+    var tableString = '<table id="wordTable"><thead><tr><th>Word</th><th>Frequency</th><th>Score</th></tr></thead><tbody>';
     for (var i = 0; i < sortedWords.length; i++) {
         if (sortedWords[i][1] >= minReps && sortedWords[i][0] != '') {
-            tableString += `<tr><td>${sortedWords[i][0]}</td><td>${sortedWords[i][1]}</td></tr>`;
+            tableString += `<tr><td>${sortedWords[i][0]}</td><td>${sortedWords[i][1]}</td><td>${sortedWords[i][0].length*Number(sortedWords[i][1])}</td></tr>`;
         }
     }
     tableString += '</tbody></table>';
@@ -40,9 +40,9 @@ async function calcStats(chords, csvPresent) {
     var commonPhrases = getPhraseFrequency(text, 6, minReps, chords)
 
     // Build up the table in memory as a string
-    var tableString = '<table id="phraseTable"><thead><tr><th>Phrase</th><th>Frequency</th></tr></thead><tbody>';
+    var tableString = '<table id="phraseTable"><thead><tr><th>Phrase</th><th>Frequency</th><th>Score</th></tr></thead><tbody>';
     Object.keys(commonPhrases).forEach(phrase => {
-        tableString += `<tr><td>${phrase}</td><td>${commonPhrases[phrase]}</td></tr>`;
+        tableString += `<tr><td>${phrase}</td><td>${commonPhrases[phrase]}</td><td>${phrase.length*Number(commonPhrases[phrase])}</td></tr>`;
     });
     tableString += '</tbody></table>';
 
