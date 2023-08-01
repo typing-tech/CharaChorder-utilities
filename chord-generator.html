@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <title>CharaChorder Utilities - CC1 Chord Library</title>
+        <meta name="description" content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
+        <meta property="og:title" content="CharaChorder Utilities - Home">
+        <meta property="og:description" content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
+      </head>
+      
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>CharaChorder Utilities</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="count.html">Count Bigrams</a></li>
+                <li><a href="stats.html">Chord Stats</a></li>
+                <li><a href="chordfinder.html">ChordFinder</a></li>
+                <li><a href="partialanagrams.html">Anagrams</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
+            </ul>
+        </nav>
+    </header>
+    </br>
+    <p>To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie words at the top of the list get preference to shorter chords inputs).</p>
+    <input type="file" id="file-upload" accept=".txt" />
+    <button onclick="handleFile()">Generate Chords</button>
+    <a href="#" download="chords.csv" id="download-link" style="display: none;">Download CSV</a>
+
+    <script>
+        // Constants and variables
+        const MIN_KEYS = 2;
+        const MIN_CHARS = 2;
+        const KEY_MIRROR_MAP_L = {
+            ",": ";",
+            "u": "s",
+            "'": "y",
+            ".": "j",
+            "o": "n",
+            "i": "l",
+            "e": "t",
+            "r": "a",
+            "v": "p",
+            "m": "h",
+            "c": "d",
+            "k": "f",
+            "z": "q",
+            "w": "b",
+            "g": "Dup",
+            "x": null
+        };
+        const KEY_MIRROR_MAP_R = invert(KEY_MIRROR_MAP_L);
+        const KEY_FINGER_MAP = {
+            "LH_Pinky_Primary": ["LAK"],
+            "LH_Ring_Primary": [",", "u", "'", "LH_Ring_Primary_Center"],
+            "LH_Middle_Primary": [".", "o", "i", "LH_Middle_Primary_Center"],
+            "LH_Index": ["e", "r", "LH_Index_Center"],
+            "LH_Thumb_1": ["m", "v", "k", "c", "LH_Thumb_1_Center"],
+            "LH_Thumb_2": ["g", "z", "w", "LH_Thumb_2_Center"],
+            "RH_Thumb_2": ["x", "b", "q", "Dup", "RH_Thumb_2_Center"],
+            "RH_Thumb_1": ["p", "f", "d", "h", "RH_Thumb_1_Center"],
+            "RH_Index": ["a", "t", "RH_Index_Center"],
+            "RH_Middle_Primary": ["l", "n", "j", "RH_Middle_Primary_Center"],
+            "RH_Ring_Primary": ["y", "s", ";", "RH_Ring_Primary_Center"],
+            "RH_Pinky_Primary": ["RAK"]
+        };
+        const ALT_KEYS = ["LAK", "RAK"];
+        const CHORD_GENERATOR_LOGIC = [
+            "skipKeys",
+            "allKeys",
+            "useMirrorKeys",
+            "useAltKeys",
+            "use3dKeys"
+        ];
+
+        let usedChords = {};
+        let wordsFile;
+        let chordsFile;
+
+        // Invert function used to create KEY_MIRROR_MAP_R
+        function invert(obj) {
+            return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+        }
+
+        function handleFile() {
+            const fileInput = document.getElementById('file-upload'); // Corrected the id from 'file-input' to 'file-upload'
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                words = e.target.result.split('\n');
+                generate(words); // Updated generate function now accepts words as parameter
+            };
+            reader.readAsText(file);
+        }
+
+        // Updated generate function
+        async function generate(words) {
+            words = words.map(word => word.toLowerCase());
+            words = [...new Set(words)]; // Removes duplicates
+            const sortedWords = sortWords(words);
+
+            for (const word of sortedWords) {
+                if (!word || word.length < MIN_CHARS) continue;
+
+                const chars = getChars(word);
+                const chord = calculateChord(chars);
+
+                if (!chord) {
+                    console.error(`Could not generate chord for ${word}`);
+                    continue;
+                }
+
+                assignChord(word, chord);
+            }
+
+            createCsv();
+        }
+
+
+        function sortWords(words) {
+            // We create an array of tuples, where each tuple is [index, word]
+            const wordsWithIndex = words.map((word, index) => [index, word]);
+
+            // We then sort this array of tuples using a comparator function
+            wordsWithIndex.sort((a, b) => {
+                // a and b are tuples of the form [index, word]
+                const lengthDifference = a[1].length - b[1].length;
+                if (lengthDifference !== 0) return lengthDifference;
+
+                // If the words are the same length, we sort by their original order
+                return a[0] - b[0];
+            });
+
+            // Finally, we return a new array containing only the sorted words
+            return wordsWithIndex.map(([index, word]) => word);
+        }
+
+        // Placeholder functions
+        function skipKeys(chars) {
+            const chord = [];
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                chord.push(char);
+                if (fingerConflict(chord)) chord.pop();
+                if (chord.length >= MIN_KEYS && !usedChord(chord)) return chord;
+            }
+            return null;
+        }
+
+
+        function allKeys(chars) {
+            const chord = [];
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                chord.push(char);
+                if (fingerConflict(chord)) chord.pop();
+                if (chord.length >= MIN_KEYS && !usedChord(chord)) return chord;
+            }
+            return null;
+        }
+
+
+        function useMirrorKeys(chars) {
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                const mirrorChords = mirrorKeyCombinations([char]);
+                for (let j = 0; j < mirrorChords.length; j++) {
+                    const mirrorChord = mirrorChords[j];
+                    if (!fingerConflict(mirrorChord) && !usedChord(mirrorChord)) return mirrorChord;
+                }
+            }
+            return null;
+        }
+
+        function mirrorKeyCombinations(chord) {
+            let combinations = [[]];
+            chord.forEach(char => {
+                const mirrorKey = KEY_MIRROR_MAP_L[char] || KEY_MIRROR_MAP_R[char];
+                const newCombinations = [];
+                combinations.forEach(comb => {
+                    newCombinations.push([...comb, char]);
+                    if (mirrorKey) newCombinations.push([...comb, mirrorKey]);
+                });
+                combinations = newCombinations;
+            });
+            return combinations;
+        }
+
+        function use3DKeys(chars) {
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                const threeDChords = threeDKeyCombinations([char]);
+                for (let j = 0; j < threeDChords.length; j++) {
+                    const threeDChord = threeDChords[j];
+                    if (!fingerConflict(threeDChord) && !usedChord(threeDChord)) return threeDChord;
+                }
+            }
+            return null;
+        }
+
+        function threeDKeyCombinations(chord) {
+            let combinations = [[]];
+            chord.forEach(char => {
+                const threeDKey = getThreeDKey(char);
+                const newCombinations = [];
+                combinations.forEach(comb => {
+                    newCombinations.push([...comb, char]);
+                    if (threeDKey) newCombinations.push([...comb, threeDKey]);
+                });
+                combinations = newCombinations;
+            });
+            return combinations;
+        }
+
+        function getThreeDKey(char) {
+            for (let finger in KEY_FINGER_MAP) {
+                if (KEY_FINGER_MAP[finger].includes(char)) {
+                    return `${finger}_Center`;
+                }
+            }
+            return null;
+        }
+
+        function useAltKeys(chars) {
+            for (let i = 0; i < ALT_KEYS.length; i++) {
+                const altKey = ALT_KEYS[i];
+                const charsWithAlt = [...chars, altKey];
+                const chord = allKeys(charsWithAlt);
+                if (chord) return chord;
+            }
+            return null;
+        }
+
+        function fingerConflict(chord) {
+            if (hasDuplicates(chord)) return true;
+
+            for (let fingerKeys of Object.values(KEY_FINGER_MAP)) {
+                if (fingerKeys.filter(value => chord.includes(value)).length > 1) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function usedChord(chord) {
+            for (let used of Object.values(usedChords)) {
+                if (arraysEqual(used.sort(), chord.sort())) return true;
+            }
+
+            return false;
+        }
+
+        function arraysEqual(a, b) {
+            if (a.length !== b.length) return false;
+
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+
+            return true;
+        }
+
+        function calculateChord(chars) {
+            for (let logic of CHORD_GENERATOR_LOGIC) {
+                let chord = window[logic](chars);
+                if (chord) return chord;
+            }
+            return null;
+        }
+
+        function getChars(word) {
+            let chars = Array.from(word);
+            if (hasDuplicates(chars)) {
+                chars.push('Dup');
+            }
+            return chars;
+        }
+
+        function hasDuplicates(array) {
+            return (new Set(array)).size !== array.length;
+        }
+
+        function assignChord(word, chord) {
+            usedChords[word] = chord.sort();
+        }
+
+        function createCsv() {
+            let csvContent = '';
+            for (let [word, chord] of Object.entries(usedChords)) {
+                csvContent += `${chord.join(" + ")},${word}\r\n`;
+            }
+
+            // Create a Blob from the CSV string
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            // Create a link pointing to the Blob
+            var url = URL.createObjectURL(blob);
+            var link = document.getElementById("download-link"); // Use the existing download link instead of creating a new one
+            link.setAttribute("href", url);
+            link.style.display = 'block'; // Display the download link
+        }
+    </script>
+</body>
+
+</html>
