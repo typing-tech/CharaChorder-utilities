@@ -2,42 +2,49 @@
 <html>
 
 <head>
-  <title>CharaChorder Utilities - CC1 Chord Library</title>
-  <meta name="description"
-    content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
-  <meta property="og:title" content="CharaChorder Utilities - Home">
-  <meta property="og:description"
-    content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
-  <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <title>CharaChorder Utilities - CC1 Chord Library</title>
+    <meta name="description"
+        content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
+    <meta property="og:title" content="CharaChorder Utilities - Home">
+    <meta property="og:description"
+        content="CharaChorder Utilities is a set of tools for that help users identify chords for their devices.">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-  <header>
-    <h1>CharaChorder Utilities</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="count.html">Count Bigrams</a></li>
-        <li><a href="stats.html">Chord Stats</a></li>
-        <li><a href="chordfinder.html">ChordFinder</a></li>
-        <li><a href="partialanagrams.html">Anagrams</a></li>
-        <li><a href="practice.html">Practice</a></li>
-        <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
-      </ul>
-    </nav>
-  </header>
-  </br>
-  <p>To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie words at
-    the top of the list get preference to shorter chords inputs).</p>
-  <input type="file" id="fileInput" />
-  <button onclick="generateChords()">Generate Chords</button>
-  <div id="progress-container" style="display: none; width: 50%; background-color: #ddd; border-radius: 10px; margin: 0 auto;">
-    <div id="progress-bar" style="width: 0%; height: 10px; background-color: #4caf50; border-radius: 10px;"></div>
-  </div>
-  <a href="#" download="chords.csv" id="download-link" style="display: none;">Download Chords</a>
+    <header>
+        <h1>CharaChorder Utilities</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="count.html">Count Bigrams</a></li>
+                <li><a href="stats.html">Chord Stats</a></li>
+                <li><a href="chordfinder.html">ChordFinder</a></li>
+                <li><a href="partialanagrams.html">Anagrams</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
+            </ul>
+        </nav>
+    </header>
+    </br>
+    <p>To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie words at
+        the top of the list get preference to shorter chords inputs).</p>
+    <input type="file" id="fileInput" />
+    <div id="slider-label">Select number of chord keys</div>
+    <div id="slider-range"></div>
+    <div id="selected-values">Selected range: 2 - 6</div>
+    <button onclick="generateChords()">Generate Chords</button>
+    <div id="progress-container"
+        style="display: none; width: 50%; background-color: #ddd; border-radius: 10px; margin: 0 auto;">
+        <div id="progress-bar" style="width: 0%; height: 10px; background-color: #4caf50; border-radius: 10px;"></div>
+    </div>
+    <a href="#" download="chords.csv" id="download-link" style="display: none;">Download Chords</a>
 
-  <script type='text/javascript' src='js/generator.js'></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type='text/javascript' src='js/generator.js'></script>
 </body>
 
 </html>

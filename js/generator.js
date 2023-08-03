@@ -1,5 +1,5 @@
-const MIN_CHORD_LENGTH = 2;
-const MAX_CHORD_LENGTH = 6;
+let minChordLength = 2;
+let maxChordLength = 6;
 const MIN_WORD_LENGTH = 2;
 const ALT_KEYS = ['LEFT_ALT', 'RIGHT_ALT'];
 const LENGTH_PROPORTIONAL = false;
@@ -213,8 +213,8 @@ class ChordGenerator {
     const chord = [];
     for (const char of chars) {
       chord.push(char);
-      if (chord.length < MIN_CHORD_LENGTH) continue;
-      if (chord.length > MAX_CHORD_LENGTH) return null;
+      if (chord.length < minChordLength) continue;
+      if (chord.length > maxChordLength) return null;
 
       if (this.fingerConflict(chord) || this.usedChord(chord)) {
         if (skip) chord.pop();
@@ -230,8 +230,8 @@ class ChordGenerator {
     const chord = [];
     for (const char of chars) {
       chord.push(char);
-      if (chord.length < MIN_CHORD_LENGTH) continue;
-      if (chord.length > MAX_CHORD_LENGTH) return null;
+      if (chord.length < minChordLength) continue;
+      if (chord.length > maxChordLength) return null;
 
       for (const combination of combinationFn.call(this, chord)) {
         if (!this.fingerConflict(combination) && !this.usedChord(combination)) return combination;
@@ -288,3 +288,17 @@ class ChordGenerator {
     return this.words.map((word, index) => [word, index]).sort(([aWord], [bWord]) => aWord.length - bWord.length || aWord.localeCompare(bWord)).map(([word]) => word);
   }
 }
+
+$(function() {
+  $("#slider-range").slider({
+    range: true,
+    min: 1,
+    max: 10,
+    values: [minChordLength, maxChordLength],
+    slide: function(event, ui) {
+      $("#selected-values").text("Selected range: " + ui.values[0] + " - " + ui.values[1]);
+      minChordLength = ui.values[0];
+      maxChordLength = ui.values[1];
+    }
+  });
+});
