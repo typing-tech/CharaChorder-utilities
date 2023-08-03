@@ -224,23 +224,6 @@ form label[for="minReps"] {
     border-radius: 10px;
 }
 
-#download-link {
-    display: inline-block;
-    width: 20%;
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    border-radius: 10px;
-    margin: 20px auto;
-}
-
-#download-link:hover {
-    background-color: #45a049;
-}
-
 #slider-range {
     width: 20%;
     border-radius: 10px;
