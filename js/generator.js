@@ -31,7 +31,7 @@ const KEY_FINGER_MAP = {
   "LH_INDEX": ['e', 'r', 'SPACE', 'BKSP'],
   "LH_THUMB_1": ['m', 'v', 'k', 'c'],
   "LH_THUMB_2": ['g', 'z', 'w'],
-  "RH_THUMB_2": ['x', 'b', 'q'],
+  "RH_THUMB_2": ['x', 'b', 'q', 'DUP'],
   "RH_THUMB_1": ['p', 'f', 'd', 'h'],
   "RH_INDEX": ['a', 't', 'SPACE', 'ENTER'],
   "RH_MID_1": ['l', 'n', 'j'],
