@@ -13,7 +13,7 @@ h1 {
     text-align: center;
     margin: 0 0 20px 0;
 }
-  
+
 p {
     text-align: center;
     font-size: 18px;
@@ -40,7 +40,8 @@ p {
     font-size: 1.2em;
 }
 
-#converter-form label, #stats-form label {
+#converter-form label,
+#stats-form label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
@@ -184,21 +185,51 @@ li {
 
 form label[for="minReps"] {
     display: inline-block;
-    width: 600px; /* Adjust as needed */
+    width: 600px;
+    /* Adjust as needed */
     text-align: right;
     padding-right: 10px;
-  }
-  
-  #minReps {
+}
+
+#minReps {
     display: inline-block;
-  }
-  
-  #results:not(:empty), #phrases:not(:empty) {
+}
+
+#results:not(:empty),
+#phrases:not(:empty) {
     border: 2px solid #333;
     padding: 20px;
     margin: 10px;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
+}
+
+#progress-bar {
+    transition: width 0.3s ease;
+}
+
+#progress-container {
+    width: 50%;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin: 0 auto;
+    /* This will center the container */
+}
+
+#progress-bar {
+    width: 0%;
+    height: 10px;
+    background-color: #4caf50;
+    border-radius: 10px;
+}
+
+#slider-range {
+    width: 20%;
+    border-radius: 10px;
+    margin: 20px auto;
+}
+
+#slider-label {
+    margin: 20px auto;
+}
