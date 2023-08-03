@@ -97,7 +97,6 @@ class ChordGenerator {
     const processWord = (index) => {
       if (index >= totalWords) {
         this.createCsv();
-        document.getElementById('download-link').style.display = 'block';
         return;
       }
 
