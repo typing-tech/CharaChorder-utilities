@@ -109,10 +109,9 @@ async function startChordGeneration(words) {
 }
 
 function createCsv(chords) {
-  let csvContent = "";
-  for (const [word, chord] of Object.entries(chords)) {
-    csvContent += `${chord.join('+')},${word}\n`;
-  }
+  let csvContent = Object.entries(chords)
+    .map(([word, chord]) => `${chord.join(' + ')},${word}`)
+    .join('\n');
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
