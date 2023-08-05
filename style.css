@@ -214,7 +214,6 @@ form label[for="minReps"] {
     background-color: #ddd;
     border-radius: 10px;
     margin: 0 auto;
-    /* This will center the container */
 }
 
 #progress-bar {
@@ -222,6 +221,10 @@ form label[for="minReps"] {
     height: 10px;
     background-color: #4caf50;
     border-radius: 10px;
+}
+
+#progress-label {
+    margin: 20px auto;
 }
 
 #slider-range {
@@ -232,4 +235,73 @@ form label[for="minReps"] {
 
 #slider-label {
     margin: 20px auto;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #ddd;
+    /* color: #fff; */
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    font-size: 10px;
+}
+
+.fileInputContainer {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    width: 10%;
+    font-size: 13px;
+}
+
+.fileInputContainer:hover {
+    background-color: #43a047;
+}
+
+.fileInputContainer:active {
+    background-color: #357a38;
+}
+
+#textInput {
+    display: block;
+    width: 20%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin: 0 auto;
+}
+
+#textInput::placeholder {
+    text-align: center;
+}
+
+#or-label {
+    margin: 20px auto;
+    padding-right: 3%;
 }

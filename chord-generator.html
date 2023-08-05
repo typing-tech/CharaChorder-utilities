@@ -28,17 +28,54 @@
         </nav>
     </header>
     </br>
-    <p>To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie words at
-        the top of the list get preference to shorter chords inputs).</p>
-    <input type="file" id="fileInput" />
+    <input type="text" id="textInput" placeholder="Enter word here" />
+    <p id="or-label" style="text-align: center;">OR</p>
+    <div>
+        <label for="wordFileInput" class="fileInputContainer">
+            Upload Words
+        </label>
+        <input type="file" id="wordFileInput" style="display: none;" />
+        <div id="wordFileInputName" style="display: inline-block;"></div>
+        <div class="tooltip">
+            <i>ⓘ</i>
+            <span class="tooltiptext">
+                To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie
+                words at the top of the list get preference to shorter chords inputs).
+            </span>
+        </div>
+    </div>
+    <div>
+        <label for="chordFileInput" class="fileInputContainer">
+            Upload Chords
+        </label>
+        <input type="file" id="chordFileInput" style="display: none;"/>
+        <div id="chordFileInputName" style="display: inline-block;"></div>
+        <div class="tooltip">
+            <i>ⓘ</i>
+            <span class="tooltiptext">
+                Upload existing chord library(.csv) optionally to not conflict generated chords with existing chords in your library.
+            </span>
+        </div>
+    </div>
+
     <div id="slider-label">Select number of chord keys</div>
     <div id="slider-range"></div>
     <div id="selected-values">Selected range: 2 - 6</div>
+    <input type="checkbox" id="useMirroredChars" name="useMirroredChars" style="margin-top:20px;" checked>
+    <label for="useMirroredChars">Use Mirrored Characters</label><br>
+    <input type="checkbox" id="useAltKeys" name="useAltKeys" checked>
+    <label for="useAltKeys">Use Alternate Keys</label><br>
+    <input type="checkbox" id="use3dKeys" name="use3dKeys" checked>
+    <label for="use3dKeys">Use 3D Keys</label><br>
+    <input type="checkbox" id="createCsv" name="createCsv" checked>
+    <label for="createCsv">Create CSV</label><br>
     <button onclick="generateChords()">Generate Chords</button>
     <div id="progress-container"
         style="display: none; width: 50%; background-color: #ddd; border-radius: 10px; margin: 0 auto;">
         <div id="progress-bar" style="width: 0%; height: 10px; background-color: #4caf50; border-radius: 10px;"></div>
     </div>
+    <div id="progress-label"></div>
+    <div id="output-chord"></div>
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>

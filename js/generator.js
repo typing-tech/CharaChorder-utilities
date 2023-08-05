@@ -1,5 +1,3 @@
-let minChordLength = 2;
-let maxChordLength = 6;
 const MIN_WORD_LENGTH = 2;
 const ALT_KEYS = ['LEFT_ALT', 'RIGHT_ALT'];
 const LENGTH_PROPORTIONAL = false;
@@ -31,7 +29,7 @@ const KEY_FINGER_MAP = {
   "LH_INDEX": ['e', 'r', 'SPACE', 'BKSP'],
   "LH_THUMB_1": ['m', 'v', 'k', 'c'],
   "LH_THUMB_2": ['g', 'z', 'w'],
-  "RH_THUMB_2": ['x', 'b', 'q'],
+  "RH_THUMB_2": ['x', 'b', 'q', 'DUP'],
   "RH_THUMB_1": ['p', 'f', 'd', 'h'],
   "RH_INDEX": ['a', 't', 'SPACE', 'ENTER'],
   "RH_MID_1": ['l', 'n', 'j'],
@@ -50,194 +48,259 @@ const CONFLICTING_FINGER_GROUPS = {
   "RH_RING_1": ['y', 's', ';', 'RH_RING_1_3D'],
   "RH_PINKY": ['RIGHT_ALT', 'RH_PINKY_3D']
 };
-const CHORD_GENERATOR_LOGIC = [
-  'skipKeys',
-  'allKeys',
-  'skipWithMirrorKeys',
-  'allWithMirrorKeys',
-  'skipWithAltKeys',
-  'allWithAltKeys',
-  'skipWith3dKeys',
-  'allWith3dKeys'
+const CHORD_GENERATORS = [
+  'onlyCharsGenerator',
+  'useMirroredCharsGenerator',
+  'useAltKeysGenerator',
+  'use3dKeysGenerator'
 ];
 
-function generateChords() {
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
-  if (!file) {
-    console.log("No file selected");
-    return;
-  }
+let minChordLength = 2;
+let maxChordLength = 6;
+let createCsvFile = true;
 
+function generateChords() {
+  createCsvFile = document.getElementById('createCsv').checked;
+  let wordFileInput = document.getElementById('wordFileInput');
+  let wordFile = wordFileInput.files[0];
+  let words = [];
+
+  if (wordFile) {
+    let reader = new FileReader();
+
+    reader.onload = function (event) {
+      words = event.target.result.split('\n');
+      startChordGeneration(words);
+    };
+
+    reader.readAsText(wordFile);
+  } else {
+    let word = document.getElementById('textInput').value;
+    if (word) {
+      words = word.split(',').map(s => s.trim());
+      startChordGeneration(words);
+    } else {
+      console.log("No wordFile or text input");
+      return;
+    }
+  }
+}
+
+async function startChordGeneration(words) {
   const progressContainer = document.getElementById('progress-container');
   const progressBar = document.getElementById('progress-bar');
   progressContainer.style.display = 'block';
   progressBar.style.width = '0%';
+  const progressLabel = document.getElementById('progress-label');
+  let generator = new ChordGenerator(words);
 
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const words = event.target.result.split('\n');
-    const generator = new ChordGenerator(words);
-    generator.generate();
-  };
-  reader.readAsText(file);
+  console.log("Generating chords...");
+  let chords = await generator.generate(progress => {
+    progressBar.style.width = `${progress * 100}%`;
+    progressLabel.textContent = `${Math.round(progress * 100)}%`;
+  });
+
+  if (createCsvFile) {
+    createCsv(chords);
+  } else {
+    createChordsTable(chords);
+  }
+  progressLabel.textContent = "Chord generation complete!";
 }
 
+function createCsv(chords) {
+  let csvContent = "";
+  for (const [word, chord] of Object.entries(chords)) {
+    csvContent += `${chord.join('+')},${word}\n`;
+  }
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", "chords.csv");
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function createChordsTable(chords) {
+  let table = document.createElement('table');
+  let header = table.createTHead();
+  let row = header.insertRow(0);
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+  cell1.innerHTML = "<b>Word</b>";
+  cell2.innerHTML = "<b>Chord</b>";
+
+  for (let word in chords) {
+    let row = table.insertRow();
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    cell1.innerHTML = word;
+    cell2.innerHTML = chords[word].sort().join(" + ");
+  }
+
+  let outputDiv = document.getElementById('output-chord');
+  outputDiv.innerHTML = "";
+  table.style.margin = "10%";
+  outputDiv.appendChild(table);
+}
 
 class ChordGenerator {
   constructor(words) {
+    this.onlyChars = true;
+    this.useMirroredChars = true;
+    this.use3dKeys = true;
+    this.useAltKeys = true;
     this.usedChords = {};
+    this.uploadedChords = {};
     this.words = [...new Set(words.map(word => word.toLowerCase()))];
   }
 
-  generate() {
-    const progressBar = document.getElementById('progress-bar');
-    const totalWords = this.wordsList().length;
+  generate(onProgress) {
+    return this.loadUploadedChords()
+      .then(() => {
+        const totalWords = this.wordsList().length;
 
-    const processWord = (index) => {
-      if (index >= totalWords) {
-        this.createCsv();
-        return;
-      }
+        this.useMirroredChars = document.getElementById('useMirroredChars').checked;
+        this.use3dKeys = document.getElementById('use3dKeys').checked;
+        this.useAltKeys = document.getElementById('useAltKeys').checked;
 
-      const word = this.wordsList()[index];
-      if (word === null) throw "Word is blank";
-      if (word.length >= MIN_WORD_LENGTH) {
-        const chord = this.calculateChord(this.getChars(word));
-        if (chord) {
-          this.assignChord(word, chord.sort());
-        } else {
-          console.log("Could not generate chord for", word);
-        }
-      }
+        return new Promise(resolve => {
+          const processWord = (index) => {
+            if (index >= totalWords) {
+              resolve(this.usedChords);
+              return;
+            }
 
-      const progress = (index + 1) / totalWords * 100;
-      progressBar.style.width = `${progress}%`;
+            const word = this.wordsList()[index];
+            const chord = this.calculateChord(this.getChars(word));
+            if (chord) {
+              this.assignChord(word, chord.sort());
+            } else {
+              console.log("Could not generate chord for", word);
+            }
 
-      requestAnimationFrame(() => processWord(index + 1));
-    };
+            onProgress((index + 1) / totalWords);
+            requestAnimationFrame(() => processWord(index + 1));
+          };
 
-    processWord(0);
-  }
-
-
-  createCsv() {
-    let csvContent = "";
-    for (const [word, chord] of Object.entries(this.usedChords)) {
-      csvContent += `${chord.join('+')},${word}\n`;
-    }
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", "chords.csv");
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+          processWord(0);
+        });
+      });
   }
 
   wordsList() {
-    return LENGTH_PROPORTIONAL ? this.sortedWords() : this.words;
+    let list = LENGTH_PROPORTIONAL ? this.sortedWords() : this.words;
+
+    return list.filter(word => word.length >= MIN_WORD_LENGTH);
   }
 
+  loadUploadedChords() {
+    return new Promise((resolve, reject) => {
+      let chordFileInput = document.getElementById('chordFileInput');
+      let chordFile = chordFileInput.files[0];
+      if (!chordFile) {
+        resolve();
+        return;
+      }
+
+      var reader = new FileReader();
+      reader.onload = (event) => {
+        var content = event.target.result;
+        var lines = content.split('\n');
+
+        lines.forEach((line) => {
+          var parts = line.split(',');
+          if (parts.length === 2) {
+            var chord = parts[0].trim().split(' + ');
+            var word = parts[1].trim();
+            this.uploadedChords[word] = chord;
+          }
+        });
+
+        resolve();
+      };
+
+      reader.onerror = reject;
+      reader.readAsText(chordFile);
+    });
+  }
+
+
   calculateChord(chars) {
-    for (const logic of CHORD_GENERATOR_LOGIC) {
-      const chord = this[logic](chars);
-      if (chord) return chord;
+    for (const generator of CHORD_GENERATORS) {
+      const option = generator.replace('Generator', '');
+      if (this[option]) {
+        const chord = this[generator](chars);
+        if (chord) return chord;
+      }
     }
     return null;
   }
 
   getChars(word) {
-    const chars = word.split("");
-    return chars.length > new Set(chars).size ? ["DUP", ...new Set(chars)] : [...new Set(chars)];
-  }
+    const chars = word.split("").filter(str => str !== " ");;
+    const uniq_chars = chars.length > new Set(chars).size ? ["DUP", ...new Set(chars)] : [...new Set(chars)];
+    const validChars = Object.values(KEY_FINGER_MAP).flat();
 
+    return uniq_chars.filter(char => validChars.includes(char));
+  }
 
   assignChord(word, chord) {
     this.usedChords[word] = chord;
   }
 
-  skipKeys(chars) {
-    return this.processKeys(chars, true);
-  }
 
-  allKeys(chars) {
-    return this.processKeys(chars, false);
-  }
-
-  skipWithMirrorKeys(chars) {
-    return this.useMirrorKeys(chars, true);
-  }
-
-  allWithMirrorKeys(chars) {
-    return this.useMirrorKeys(chars, false);
-  }
-
-  skipWith3dKeys(chars) {
-    return this.use3dKeys(chars, true);
-  }
-
-  allWith3dKeys(chars) {
-    return this.use3dKeys(chars, false);
-  }
-  skipWithAltKeys(chars) {
-    return this.useAltKeys(chars, true);
-  }
-
-  allWithAltKeys(chars) {
-    return this.useAltKeys(chars, false);
-  }
-
-  useMirrorKeys(chars, skip) {
-    return this.processCombinations(chars, this.mirrorKeyCombinations, skip);
-  }
-
-  use3dKeys(chars, skip) {
-    return this.processCombinations(chars, this.threeDKeyCombinations, skip);
-  }
-
-  useAltKeys(chars, skip) {
-    for (const altKey of ALT_KEYS) {
-      const charsWithAlt = [altKey, ...chars];
-      const chord = this.processKeys(charsWithAlt, skip);
-      if (chord) return chord;
+  onlyCharsGenerator(chars) {
+    for (const chord of this.allCombinations(chars)) {
+      if (this.validChord(chord)) return chord;
     }
-    return null;
   }
 
-  processKeys(chars, skip) {
-    const chord = [];
-    for (const char of chars) {
-      chord.push(char);
-      if (chord.length < minChordLength) continue;
-      if (chord.length > maxChordLength) return null;
+  useMirroredCharsGenerator(chars) {
+    for (const chord of this.allCombinations([...new Set([...chars, ...this.mirrorKeys(chars)])])) {
+      if (this.validChord(chord)) return chord;
+    }
+  }
 
-      if (this.fingerConflict(chord) || this.usedChord(chord)) {
-        if (skip) chord.pop();
-        continue;
+  use3dKeysGenerator(chars) {
+    for (const chord of this.allCombinations([...new Set([...chars, ...this.threeDKeys(chars)])])) {
+      if (this.validChord(chord)) return chord;
+    }
+  }
+
+  useAltKeysGenerator(chars) {
+    for (const chord of this.allCombinations([...new Set([...chars, ...ALT_KEYS])])) {
+      if (this.validChord(chord)) return chord;
+    }
+  }
+
+  validChord(chord) {
+    return !this.fingerConflict(chord) && !this.usedChord(chord) && !this.uploadedChord(chord);
+  }
+
+  powerSet(chars) {
+    const result = [[]];
+
+    for (const value of chars) {
+      const length = result.length;
+
+      for (let i = 0; i < length; i++) {
+        const subset = result[i];
+        result.push(subset.concat(value));
       }
-      return chord;
     }
-    return null;
+
+    return result;
   }
 
-
-  processCombinations(chars, combinationFn, skip) {
-    const chord = [];
-    for (const char of chars) {
-      chord.push(char);
-      if (chord.length < minChordLength) continue;
-      if (chord.length > maxChordLength) return null;
-
-      for (const combination of combinationFn.call(this, chord)) {
-        if (!this.fingerConflict(combination) && !this.usedChord(combination)) return combination;
-      }
-      if (skip) chord.pop();
-    }
-    return null;
+  allCombinations(chars) {
+    return this.powerSet(chars)
+      .filter(subset => subset.length >= minChordLength && subset.length <= maxChordLength)
+      .sort((a, b) => a.length - b.length);
   }
 
   fingerConflict(chord) {
@@ -257,23 +320,20 @@ class ChordGenerator {
     });
   }
 
-  mirrorKeyCombinations(chord) {
-    let combinations = [[]];
-    for (const char of chord) {
-      const mirrorKey = KEY_MIRROR_MAP_L[char] || KEY_MIRROR_MAP_R[char];
-      combinations = combinations.flatMap((combination) => [combination.concat(char), combination.concat(mirrorKey)].filter((comb) => comb.every(Boolean)));
-    }
-    return combinations;
+  uploadedChord(chord) {
+    const sortedChord = [...chord].sort();
+    return Object.values(this.uploadedChord).some(uploadedChord => {
+      const sortedUsedChord = [...usedChord].sort();
+      return JSON.stringify(sortedUsedChord) === JSON.stringify(sortedChord);
+    });
   }
 
-  threeDKeyCombinations(chord) {
-    let combinations = [[]];
-    for (const char of chord) {
-      const threeDKey = this.getThreeDKey(char);
-      if (!threeDKey) continue;
-      combinations = combinations.flatMap((combination) => [combination.concat(char), combination.concat(threeDKey)].filter((comb) => comb.every(Boolean)));
-    }
-    return combinations;
+  mirrorKeys(chord) {
+    return chord.map(char => KEY_MIRROR_MAP_L[char] || KEY_MIRROR_MAP_R[char]);
+  }
+
+  threeDKeys(chord) {
+    return chord.map(char => this.getThreeDKey(char));
   }
 
   getThreeDKey(char) {
@@ -288,16 +348,24 @@ class ChordGenerator {
   }
 }
 
-$(function() {
+$(function () {
   $("#slider-range").slider({
     range: true,
     min: 1,
     max: 10,
     values: [minChordLength, maxChordLength],
-    slide: function(event, ui) {
+    slide: function (event, ui) {
       $("#selected-values").text("Selected range: " + ui.values[0] + " - " + ui.values[1]);
       minChordLength = ui.values[0];
       maxChordLength = ui.values[1];
     }
   });
+});
+
+document.getElementById('wordFileInput').addEventListener('change', function () {
+  document.getElementById('wordFileInputName').textContent = this.files[0].name;
+});
+
+document.getElementById('chordFileInput').addEventListener('change', function () {
+  document.getElementById('chordFileInputName').textContent = this.files[0].name;
 });
