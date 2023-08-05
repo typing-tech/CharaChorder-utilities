@@ -322,9 +322,9 @@ class ChordGenerator {
 
   uploadedChord(chord) {
     const sortedChord = [...chord].sort();
-    return Object.values(this.uploadedChord).some(uploadedChord => {
-      const sortedUsedChord = [...usedChord].sort();
-      return JSON.stringify(sortedUsedChord) === JSON.stringify(sortedChord);
+    return Object.values(this.uploadedChords).some(uploadedChord => {
+      const sortedUploadedChord = [...uploadedChord].sort();
+      return JSON.stringify(sortedUploadedChord) === JSON.stringify(sortedChord);
     });
   }
 
