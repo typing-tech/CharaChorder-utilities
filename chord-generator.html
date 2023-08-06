@@ -28,7 +28,16 @@
         </nav>
     </header>
     </br>
-    <input type="text" id="textInput" placeholder="Enter word here" />
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <input type="text" id="textInput" placeholder="Enter word(s) here" />
+        <div class="tooltip">
+            <i>ⓘ</i>
+            <span class="tooltiptext">
+                You can type individual words here separated by a comma sorted by priority order (ie words at the beginning of 
+                the list get preference to shorter chord inputs).
+            </span>
+        </div>
+    </div>
     <p id="or-label" style="text-align: center;">OR</p>
     <div>
         <label for="wordFileInput" class="fileInputContainer">
@@ -40,7 +49,7 @@
             <i>ⓘ</i>
             <span class="tooltiptext">
                 To use this tool, upload a .txt file with words, each one on its own line, sorted by priority order (ie
-                words at the top of the list get preference to shorter chords inputs).
+                words at the top of the list get preference to shorter chord inputs).
             </span>
         </div>
     </div>
