@@ -227,7 +227,7 @@ form label[for="minReps"] {
     margin: 20px auto;
 }
 
-#slider-range {
+#slider-range, #slider-range-index, #slider-range-keys {
     width: 20%;
     border-radius: 10px;
     margin: 20px auto;

@@ -5,7 +5,9 @@
   <title>CharaChorder Practice Chords</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
   <script type='text/javascript' src="js/practice.js"></script>
 </head>
@@ -41,11 +43,24 @@
       <div class="tooltip">
         <i>ⓘ</i>
         <span class="tooltiptext">
-          Browse for your chord csv export and click "Copy to clipboard for practice". Paste into the
+          Browse for your chord csv export and either
+          1. Click "Copy to clipboard for practice". Paste into the
           "Custom" section of Monkeytype or CharaTyping and make sure to check the "Pipe Delimeter" checkbox.
+          2. Click "Start Practice" to practice in this window.
         </span>
       </div>
     </div>
+    <div id="filter-chords" style="display: none;">
+      <label>Filter Chords</label>
+      <div>Index Range</div>
+      <div id="slider-range-index"></div>
+      <div id="selected-values-index"></div>
+
+      <div style="margin-top: 5%;">Key Count Range</div>
+      <div id="slider-range-keys"></div>
+      <div id="selected-values-keys"></div>
+    </div>
+
     <button type="button" id="copy-chords">Copy chords</button>
     <button type="button" id="start-practice-button">Start Practice</button>
 
