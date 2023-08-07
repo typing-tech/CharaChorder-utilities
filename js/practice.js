@@ -7,6 +7,19 @@ function startPractice(event) {
     });
 }
 
+function copyToClipboard(event) {
+  event.preventDefault();
+  return practice.loadUploadedChords()
+    .then(() => {
+      text = Object.keys(practice.uploadedChords).join(' | ');
+      navigator.clipboard.writeText(text).then(function() {
+        console.log('Text successfully copied to clipboard');
+      }).catch(function(err) {
+        console.error('Unable to copy text to clipboard', err);
+      });
+    });
+}
+
 class ChordPractice {
   constructor() {
     this.uploadedChords = {};
@@ -95,7 +108,8 @@ class ChordPractice {
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('startPracticeButton').addEventListener('click', startPractice);
+  document.getElementById('start-practice-button').addEventListener('click', startPractice);
+  document.getElementById('copy-chords').addEventListener('click', copyToClipboard);
   document.getElementById('chordFileInput').addEventListener('change', function () {
     document.getElementById('chordFileInputName').textContent = this.files[0].name;
   });

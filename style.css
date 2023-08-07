@@ -393,3 +393,15 @@ input:checked+.toggle:after {
     margin-left: auto;
     margin-right: auto;
 }
+
+#copy-chords {
+    width: 33.5%;
+    margin: 0 auto;
+    font-family: "Georgia", serif;
+    margin-bottom: 3%;
+    margin-right: 34.5%;
+}
+
+#start-practice-button {
+    font-family: "Georgia", serif;
+}
