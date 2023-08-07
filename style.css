@@ -381,3 +381,15 @@ input:checked+.toggle:after {
 #output-chord {
     margin-right: 15%;
 }
+
+#textInput {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+#line {
+    border-top: 2px solid black;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}

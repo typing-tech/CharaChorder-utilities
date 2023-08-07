@@ -1,80 +1,109 @@
-document.getElementById("copyForPractice").addEventListener("click", function () {
-    // Get the input file
-    var inputFile = document.getElementById("input-file").files[0];
+function startPractice(event) {
+  event.preventDefault();
+  return practice.loadUploadedChords()
+    .then(() => {
+      practice.practice();
 
-    var reader = new FileReader();
-    reader.onload = function () {
-        var csvString = reader.result;
-        var rows = csvString.split("\n");
-
-        // Initialize an object to store the words of chordMaps
-        var words = [];
-
-        rows.forEach(function (row) {
-            console.log(row);
-            var cells = row.split(",");
-            var chord = cells[1];
-            words.push(chord);
-            console.log(chord)
-        });
-        console.log(words)
-
-        var wordList = words.join(" | ");
-        copyTextToClipboard(wordList);
-        toastr.success('Word list copied to clipboard');
-    };
-
-    reader.readAsText(inputFile);
-});
-
-toastr.options = {
-    "closeButton": true,
-    "newestOnTop": false,
-    "progressBar": false,
-    "positionClass": "toast-top-right",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "2000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
+    });
 }
 
-function fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
-    
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-  
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-  
-    try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'successful' : 'unsuccessful';
-      console.log('Fallback: Copying text command was ' + msg);
-    } catch (err) {
-      console.error('Fallback: Oops, unable to copy', err);
-    }
-  
-    document.body.removeChild(textArea);
+class ChordPractice {
+  constructor() {
+    this.uploadedChords = {};
+    this.words = [];
+    this.totalWords = 0;
+    this.correctWords = 0;
+    this.currentWord = '';
+    this.currentChord = '';
   }
-  function copyTextToClipboard(text) {
-    if (!navigator.clipboard) {
-      fallbackCopyTextToClipboard(text);
+
+  practice() {
+    if (Object.keys(this.uploadedChords).length === 0) {
+      alert('No chords added');
       return;
     }
-    navigator.clipboard.writeText(text).then(function() {
-      console.log('Async: Copying to clipboard was successful!');
-    }, function(err) {
-      console.error('Async: Could not copy text: ', err);
+
+    const practiceWindow = document.getElementById('practice-window');
+    practiceWindow.style.display = 'block';
+    this.words = Object.keys(this.uploadedChords);
+    this.showQuestion();
+  }
+
+  showQuestion() {
+    let randomIndex = Math.floor(Math.random() * this.words.length);
+    this.currentWord = this.words[randomIndex];
+    this.currentChord = this.uploadedChords[this.currentWord];
+    let questionWord = document.getElementById('question-word');
+    let chord = document.getElementById('chord');
+    chord.style.display = 'none';
+    questionWord.textContent = this.currentWord;
+    document.getElementById('textInput').focus();
+  }
+
+  checkAnswer() {
+    let answer = document.getElementById('textInput');
+    let totalWordsLabel = document.getElementById('total-words');
+    let correctWordsLabel = document.getElementById('correct-words');
+    if (answer.value.trim().toLowerCase() === this.currentWord.trim().toLowerCase()) {
+      this.correctWords++;
+      correctWordsLabel.style.color = '#4CAF50';
+      this.showQuestion();
+    } else {
+      let chord = document.getElementById('chord');
+      chord.textContent = this.currentChord;
+      chord.style.display = 'block';
+      correctWordsLabel.style.color = '#FF0000';
+    }
+    answer.value = '';
+    this.totalWords++;
+    totalWordsLabel.textContent = this.totalWords;
+    correctWordsLabel.textContent = this.correctWords;
+    document.getElementById('line').style.display = 'block';
+  }
+
+
+  loadUploadedChords() {
+    return new Promise((resolve, reject) => {
+      let chordFileInput = document.getElementById('chordFileInput');
+      let chordFile = chordFileInput.files[0];
+      if (!chordFile) {
+        resolve();
+        return;
+      }
+
+      this.uploadedChords = {};
+      var reader = new FileReader();
+      reader.onload = (event) => {
+        var content = event.target.result;
+        var lines = content.split('\n');
+
+        lines.forEach((line) => {
+          var parts = line.split(',');
+          if (parts.length === 2) {
+            var chord = parts[0].trim().split(' + ');
+            var word = parts[1].trim();
+            this.uploadedChords[word] = chord;
+          }
+        });
+
+        resolve();
+      };
+
+      reader.onerror = reject;
+      reader.readAsText(chordFile);
     });
   }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('startPracticeButton').addEventListener('click', startPractice);
+  document.getElementById('chordFileInput').addEventListener('change', function () {
+    document.getElementById('chordFileInputName').textContent = this.files[0].name;
+  });
+  document.getElementById('textInput').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      practice.checkAnswer();
+      event.preventDefault();
+    }
+  });
+});
+let practice = new ChordPractice();
