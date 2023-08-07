@@ -1,6 +1,5 @@
 const MIN_WORD_LENGTH = 2;
 const ALT_KEYS = ['LEFT_ALT', 'RIGHT_ALT'];
-const LENGTH_PROPORTIONAL = false;
 const KEY_MIRROR_MAP_L = {
   ",": ";",
   "u": "s",
@@ -18,7 +17,7 @@ const KEY_MIRROR_MAP_L = {
   "k": "f",
   "z": "q",
   "w": "b",
-  "g": "DUP",
+  "g": null,
   "x": null
 };
 const KEY_MIRROR_MAP_R = Object.fromEntries(Object.entries(KEY_MIRROR_MAP_L).map(([key, value]) => [value, key]));
@@ -50,16 +49,18 @@ const CONFLICTING_FINGER_GROUPS = {
 };
 const CHORD_GENERATORS = [
   'onlyCharsGenerator',
-  'useMirroredCharsGenerator',
+  'useMirroredKeysGenerator',
   'useAltKeysGenerator',
   'use3dKeysGenerator'
 ];
 
-let minChordLength = 2;
+let minChordLength = 3;
 let maxChordLength = 6;
-let createCsvFile = true;
+let createCsvFile = false;
 
-function generateChords() {
+function generateChords(event) {
+  if (event) event.preventDefault();
+
   createCsvFile = document.getElementById('createCsv').checked;
   let wordFileInput = document.getElementById('wordFileInput');
   let wordFile = wordFileInput.files[0];
@@ -150,9 +151,10 @@ function createChordsTable(chords) {
 class ChordGenerator {
   constructor(words) {
     this.onlyChars = true;
-    this.useMirroredChars = true;
-    this.use3dKeys = true;
+    this.useDupKey = true;
+    this.useMirroredKeys = true;
     this.useAltKeys = true;
+    this.use3dKeys = false;
     this.usedChords = {};
     this.uploadedChords = {};
     this.words = [...new Set(words.map(word => word.toLowerCase()))];
@@ -163,7 +165,8 @@ class ChordGenerator {
       .then(() => {
         const totalWords = this.wordsList().length;
 
-        this.useMirroredChars = document.getElementById('useMirroredChars').checked;
+        this.useDupKey = document.getElementById('useDupKey').checked;
+        this.useMirroredKeys = document.getElementById('useMirroredKeys').checked;
         this.use3dKeys = document.getElementById('use3dKeys').checked;
         this.useAltKeys = document.getElementById('useAltKeys').checked;
 
@@ -192,9 +195,7 @@ class ChordGenerator {
   }
 
   wordsList() {
-    let list = LENGTH_PROPORTIONAL ? this.sortedWords() : this.words;
-
-    return list.filter(word => word.length >= MIN_WORD_LENGTH);
+    return this.words.filter(word => word.length >= MIN_WORD_LENGTH);
   }
 
   loadUploadedChords() {
@@ -241,8 +242,11 @@ class ChordGenerator {
   }
 
   getChars(word) {
-    const chars = word.split("").filter(str => str !== " ");;
-    const uniq_chars = chars.length > new Set(chars).size ? ["DUP", ...new Set(chars)] : [...new Set(chars)];
+    const chars = word.split("").filter(str => str !== " ");
+    let uniq_chars = [...new Set(chars)];
+    if (uniq_chars.length < chars.length && this.useDupKey) {
+      uniq_chars = [...new Set(chars), "DUP"]
+    }
     const validChars = Object.values(KEY_FINGER_MAP).flat();
 
     return uniq_chars.filter(char => validChars.includes(char));
@@ -259,7 +263,7 @@ class ChordGenerator {
     }
   }
 
-  useMirroredCharsGenerator(chars) {
+  useMirroredKeysGenerator(chars) {
     for (const chord of this.allCombinations([...new Set([...chars, ...this.mirrorKeys(chars)])])) {
       if (this.validChord(chord)) return chord;
     }
@@ -328,11 +332,11 @@ class ChordGenerator {
   }
 
   mirrorKeys(chord) {
-    return chord.map(char => KEY_MIRROR_MAP_L[char] || KEY_MIRROR_MAP_R[char]);
+    return chord.map(char => KEY_MIRROR_MAP_L[char] || KEY_MIRROR_MAP_R[char]).filter(Boolean);
   }
 
   threeDKeys(chord) {
-    return chord.map(char => this.getThreeDKey(char));
+    return chord.map(char => this.getThreeDKey(char)).filter(Boolean);
   }
 
   getThreeDKey(char) {
@@ -340,10 +344,6 @@ class ChordGenerator {
       if (chars.includes(char)) return `${finger}_3D`;
     }
     return null;
-  }
-
-  sortedWords() {
-    return this.words.map((word, index) => [word, index]).sort(([aWord], [bWord]) => aWord.length - bWord.length || aWord.localeCompare(bWord)).map(([word]) => word);
   }
 }
 
