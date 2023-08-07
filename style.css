@@ -399,6 +399,7 @@ input:checked+.toggle:after {
     font-family: "Georgia", serif;
     margin-bottom: 3%;
     margin-right: 34.5%;
+    margin-top: 3%;
 }
 
 #start-practice-button {
