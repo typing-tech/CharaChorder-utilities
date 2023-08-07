@@ -305,3 +305,79 @@ form label[for="minReps"] {
     margin: 20px auto;
     padding-right: 3%;
 }
+
+.toggle-label {
+    display: inline-block;
+    font-weight: normal;
+    font-size: 16px;
+    width: 20%;
+    margin-left: 1%;
+    text-align: left;
+}
+
+#toggles {
+    margin-left: 3%;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 17px;
+}
+
+.toggle:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.toggle {
+    background-color: #333;
+}
+
+input:checked+.toggle:before {
+    transform: translateX(13px);
+}
+
+.toggle:after {
+    position: absolute;
+    top: 2.5px;
+    right: 5px;
+    color: #ccc;
+    transition: .4s;
+}
+
+input:checked+.toggle:after {
+    left: 5px;
+    right: auto;
+    color: #333;
+}
+
+#output-chord {
+    margin-right: 15%;
+}
