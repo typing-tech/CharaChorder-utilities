@@ -65,10 +65,11 @@
     <button type="button" id="copy-chords">Copy chords</button>
     <button type="button" id="start-practice-button">Start Practice</button>
 
-    <div id="practice-window" style="display: none;">
-      <label id="question-word" style="text-align: center;"></label>
+    <div id="practice-window" style="display: none; white-space: nowrap;">
+      <label id="first-word" style="text-align: center; display: inline;"></label>
+      <label id="other-words" style="text-align: center; display: inline;"></label>
       <label id="chord" style="display: none; text-align: center; color: #FF0000;"></label>
-      <div style="display: flex; align-items: center; justify-content: center;">
+      <div id="input-area" style="display: flex; align-items: center; justify-content: center;">
         <input type="text" id="textInput" />
         <div class="tooltip">
           <i>ⓘ</i>

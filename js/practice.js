@@ -2,32 +2,27 @@ let minChordLength = 1;
 let maxChordLength = 10;
 let minIndex = 0;
 let maxIndex = 100000;
+let upcomingWordsLength = 5;
 
 function startPractice(event) {
   event.preventDefault();
-  return practice.loadUploadedChords()
-    .then(() => {
-      practice.practice();
-    });
+  practice.practice();
 }
 
 function copyToClipboard(event) {
   event.preventDefault();
-  return practice.loadUploadedChords()
-    .then(() => {
-      text = Object.keys(practice.filterChords).join(' | ');
-      navigator.clipboard.writeText(text).then(function () {
-        console.log('Text successfully copied to clipboard');
-      }).catch(function (err) {
-        console.error('Unable to copy text to clipboard', err);
-      });
-    });
+  text = Object.keys(practice.filterChords).join(' | ');
+  navigator.clipboard.writeText(text).then(function () {
+    console.log('Text successfully copied to clipboard');
+  }).catch(function (err) {
+    console.error('Unable to copy text to clipboard', err);
+  });
 }
 
 function showFilterChords() {
   return practice.loadUploadedChords()
     .then(() => {
-      maxIndex = practice.words.length - 1;
+      maxIndex = Object.keys(practice.uploadedChords).length - 1;
       let filterChords = document.getElementById('filter-chords');
       $("#slider-range-keys").slider({
         range: true,
@@ -59,11 +54,11 @@ class ChordPractice {
   constructor() {
     this.uploadedChords = {};
     this.filterChords = {};
-    this.words = [];
     this.totalWords = 0;
     this.correctWords = 0;
     this.currentWord = '';
     this.currentChord = '';
+    this.upcomingWords = [];
   }
 
   practice() {
@@ -78,14 +73,15 @@ class ChordPractice {
   }
 
   showQuestion() {
-    let randomIndex = Math.floor(Math.random() * this.words.length);
-    this.currentWord = this.words[randomIndex];
-    this.currentChord = this.uploadedChords[this.currentWord];
-    let questionWord = document.getElementById('question-word');
+    this.currentWord = this.upcomingWords[0];
+    this.currentChord = this.filterChords[this.currentWord];
     let chord = document.getElementById('chord');
     chord.style.display = 'none';
-    questionWord.textContent = this.currentWord;
+    document.getElementById('first-word').textContent = this.currentWord;
+    document.getElementById('other-words').textContent = this.upcomingWords.slice(1).join(' ');
     document.getElementById('textInput').focus();
+    this.upcomingWords.shift();
+    this.upcomingWords.push(this.nextWord());
   }
 
   checkAnswer() {
@@ -135,13 +131,24 @@ class ChordPractice {
         });
 
         this.loadFilteredChords();
-        this.words = Object.keys(this.filterChords);
+        this.loadUpcomingWords();
         resolve();
       };
 
       reader.onerror = reject;
       reader.readAsText(chordFile);
     });
+  }
+
+  loadUpcomingWords() {
+    this.upcomingWords = Array.from(
+      { length: upcomingWordsLength }, () => this.nextWord()
+    );
+  }
+
+  nextWord() {
+    let randomIndex = Math.floor(Math.random() * Object.keys(this.filterChords).length);
+    return Object.keys(this.filterChords)[randomIndex];
   }
 
   loadFilteredChords() {

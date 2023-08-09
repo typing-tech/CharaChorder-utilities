@@ -227,7 +227,9 @@ form label[for="minReps"] {
     margin: 20px auto;
 }
 
-#slider-range, #slider-range-index, #slider-range-keys {
+#slider-range,
+#slider-range-index,
+#slider-range-keys {
     width: 20%;
     border-radius: 10px;
     margin: 20px auto;
@@ -383,8 +385,7 @@ input:checked+.toggle:after {
 
 #textInput {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 16px;
-}
+    font-size: 16px;}
 
 #line {
     border-top: 2px solid black;
@@ -404,4 +405,21 @@ input:checked+.toggle:after {
 
 #start-practice-button {
     font-family: "Georgia", serif;
+}
+
+#first-word {
+    color: #333;
+    margin-left: 25%;
+}
+
+#other-words {
+    color: #999;
+}
+
+#chord {
+    margin-top: 3%;
+}
+
+#input-area {
+    margin-top: 3%;
 }
