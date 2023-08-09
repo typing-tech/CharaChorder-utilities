@@ -106,6 +106,7 @@ async function startChordGeneration(words) {
   } else {
     createChordsTable(chords);
   }
+  progressContainer.style.display = 'none';
   progressLabel.textContent = "Chord generation complete!";
 }
 
