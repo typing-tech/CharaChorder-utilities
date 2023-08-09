@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
     showFilterChords();
   });
   document.getElementById('textInput').addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
       practice.checkAnswer();
       event.preventDefault();
     }
