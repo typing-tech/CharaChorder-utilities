@@ -3,6 +3,7 @@ let maxChordLength = 10;
 let minIndex = 0;
 let maxIndex = 100000;
 let upcomingWordsLength = 5;
+let maxWords = 25;
 
 function startPractice(event) {
   event.preventDefault();
@@ -72,8 +73,14 @@ class ChordPractice {
       return;
     }
 
+    let resultsWindow = document.getElementById('results-window');
+    resultsWindow.style.display = 'none';
     const practiceWindow = document.getElementById('practice-window');
     practiceWindow.style.display = 'block';
+    this.totalWords = 0;
+    this.correctWords = 0;
+    this.upcomingWords = [];
+    this.loadUpcomingWords();
     this.showQuestion();
     this.startTime = new Date();
   }
@@ -84,7 +91,14 @@ class ChordPractice {
     let chord = document.getElementById('chord');
     chord.style.display = 'none';
     document.getElementById('first-word').textContent = this.currentWord;
-    document.getElementById('other-words').textContent = this.upcomingWords.slice(1).join(' ');
+    var fontSize = 25;
+    var decrement = 3;
+    $('#other-words').empty();
+    this.upcomingWords.slice(1).forEach(function (word) {
+      var span = $('<span>').text(word + ' ').css('font-size', fontSize + 'px');
+      $('#other-words').append(span);
+      fontSize -= decrement;
+    });
     document.getElementById('textInput').focus();
     this.upcomingWords.shift();
     this.upcomingWords.push(this.nextWord());
@@ -94,16 +108,19 @@ class ChordPractice {
     let answer = document.getElementById('textInput');
     let totalWordsLabel = document.getElementById('total-words');
     let correctWordsLabel = document.getElementById('correct-words');
+    let firstWordLabel = document.getElementById('first-word');
     let wpmLabel = document.getElementById('wpm');
     if (answer.value.trim().toLowerCase() === this.currentWord.trim().toLowerCase()) {
       this.correctWords++;
       correctWordsLabel.style.color = '#4CAF50';
+      firstWordLabel.style.color = '#4CAF50';
       this.showQuestion();
     } else {
       let chord = document.getElementById('chord');
       chord.textContent = this.currentChord;
       chord.style.display = 'block';
       correctWordsLabel.style.color = '#FF0000';
+      firstWordLabel.style.color = '#FF0000';
     }
     answer.value = '';
     this.totalWords++;
@@ -112,6 +129,19 @@ class ChordPractice {
     wpmLabel.textContent = this.getWPM() + ' WPM';
     wpmLabel.style.display = 'inline';
     document.getElementById('line').style.display = 'block';
+    if (this.totalWords === maxWords) {
+      this.showResults();
+    }
+  }
+
+  showResults() {
+    let practiceWindow = document.getElementById('practice-window');
+    practiceWindow.style.display = 'none';
+    let resultsWindow = document.getElementById('results-window');
+    resultsWindow.style.display = 'block';
+    document.getElementById('start-practice-button').textContent = 'Practice Again';
+    document.getElementById('result-wpm').textContent = this.getWPM() + ' WPM';
+    document.getElementById('result-accuracy').textContent = Math.round(this.correctWords / this.totalWords * 100) + '%';
   }
 
 
@@ -135,12 +165,12 @@ class ChordPractice {
           if (parts.length === 2) {
             var chord = parts[0].trim().split(' + ');
             var word = parts[1].trim();
+            if (word.includes(' ')) { return; }
             this.uploadedChords[word] = chord;
           }
         });
 
         this.loadFilteredChords();
-        this.loadUpcomingWords();
         resolve();
       };
 
