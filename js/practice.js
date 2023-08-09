@@ -6,16 +6,20 @@ let upcomingWordsLength = 5;
 
 function startPractice(event) {
   event.preventDefault();
-  practice.practice();
+  practice.loadUploadedChords().then(() => {
+    practice.practice();
+  });
 }
 
 function copyToClipboard(event) {
   event.preventDefault();
-  text = Object.keys(practice.filterChords).join(' | ');
-  navigator.clipboard.writeText(text).then(function () {
-    console.log('Text successfully copied to clipboard');
-  }).catch(function (err) {
-    console.error('Unable to copy text to clipboard', err);
+  practice.loadUploadedChords().then(() => {
+    text = Object.keys(practice.filterChords).join(' | ');
+    navigator.clipboard.writeText(text).then(function () {
+      console.log('Text successfully copied to clipboard');
+    }).catch(function (err) {
+      console.error('Unable to copy text to clipboard', err);
+    });
   });
 }
 
@@ -59,6 +63,7 @@ class ChordPractice {
     this.currentWord = '';
     this.currentChord = '';
     this.upcomingWords = [];
+    this.startTime = null;
   }
 
   practice() {
@@ -70,6 +75,7 @@ class ChordPractice {
     const practiceWindow = document.getElementById('practice-window');
     practiceWindow.style.display = 'block';
     this.showQuestion();
+    this.startTime = new Date();
   }
 
   showQuestion() {
@@ -88,6 +94,7 @@ class ChordPractice {
     let answer = document.getElementById('textInput');
     let totalWordsLabel = document.getElementById('total-words');
     let correctWordsLabel = document.getElementById('correct-words');
+    let wpmLabel = document.getElementById('wpm');
     if (answer.value.trim().toLowerCase() === this.currentWord.trim().toLowerCase()) {
       this.correctWords++;
       correctWordsLabel.style.color = '#4CAF50';
@@ -102,6 +109,8 @@ class ChordPractice {
     this.totalWords++;
     totalWordsLabel.textContent = this.totalWords;
     correctWordsLabel.textContent = this.correctWords;
+    wpmLabel.textContent = this.getWPM() + ' WPM';
+    wpmLabel.style.display = 'inline';
     document.getElementById('line').style.display = 'block';
   }
 
@@ -138,6 +147,12 @@ class ChordPractice {
       reader.onerror = reject;
       reader.readAsText(chordFile);
     });
+  }
+
+  getWPM() {
+    var currentTime = new Date();
+    var elapsedTime = (currentTime - this.startTime)
+    return Math.round(this.correctWords / (elapsedTime / 1000 / 60));
   }
 
   loadUpcomingWords() {
