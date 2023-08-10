@@ -4,6 +4,7 @@ let minIndex = 0;
 let maxIndex = 100000;
 let upcomingWordsLength = 5;
 let maxWords = 25;
+let maxMistypedWords = 10;
 
 function startPractice(event) {
   event.preventDefault();
@@ -64,6 +65,8 @@ class ChordPractice {
     this.currentWord = '';
     this.currentChord = '';
     this.upcomingWords = [];
+    this.correctCharsCount = 0;
+    this.misTypedChords = {};
     this.startTime = null;
   }
 
@@ -109,12 +112,18 @@ class ChordPractice {
     let totalWordsLabel = document.getElementById('total-words');
     let correctWordsLabel = document.getElementById('correct-words');
     let firstWordLabel = document.getElementById('first-word');
-    if (answer.value.trim().toLowerCase() === this.currentWord.trim().toLowerCase()) {
+    let typedWord = answer.value.trim().toLowerCase();
+    if (typedWord === this.currentWord.trim().toLowerCase()) {
       this.correctWords++;
+      this.correctCharsCount += this.currentWord.length;
       correctWordsLabel.style.color = '#4CAF50';
       firstWordLabel.style.color = '#4CAF50';
       this.showQuestion();
     } else {
+      if (!this.misTypedChords[this.currentWord]) {
+        this.misTypedChords[this.currentWord] = [];
+      }
+      this.misTypedChords[this.currentWord].push(typedWord);
       let chord = document.getElementById('chord');
       chord.textContent = this.currentChord;
       chord.style.display = 'block';
@@ -139,6 +148,39 @@ class ChordPractice {
     document.getElementById('start-practice-button').textContent = 'Practice Again';
     document.getElementById('result-wpm').textContent = this.getWPM() + ' WPM';
     document.getElementById('result-accuracy').textContent = Math.round(this.correctWords / this.totalWords * 100) + '%';
+    this.showMistypedWords();
+  }
+
+  showMistypedWords() {
+    const table = document.createElement('table');
+    table.style.textAlign = 'center';
+
+    const headerRow = document.createElement('tr');
+    const header1 = document.createElement('th');
+    header1.textContent = 'Word';
+    const header2 = document.createElement('th');
+    header2.textContent = 'Mistyped As';
+    headerRow.appendChild(header1);
+    headerRow.appendChild(header2);
+    table.appendChild(headerRow);
+
+    const mistypedArray = Object.entries(this.misTypedChords)
+      .map(([word, typedWords]) => ({ word, typedWords, count: typedWords.length }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, maxMistypedWords);
+
+    mistypedArray.forEach(item => {
+      const row = document.createElement('tr');
+      const cell1 = document.createElement('td');
+      cell1.textContent = item.word;
+      const cell2 = document.createElement('td');
+      cell2.textContent = item.typedWords.join(', ');
+      row.appendChild(cell1);
+      row.appendChild(cell2);
+      table.appendChild(row);
+    });
+
+    $('#mistyped-words').append(table);
   }
 
 
@@ -179,7 +221,7 @@ class ChordPractice {
   getWPM() {
     var currentTime = new Date();
     var elapsedTime = (currentTime - this.startTime)
-    return Math.round(this.correctWords / (elapsedTime / 1000 / 60));
+    return Math.round((this.correctCharsCount / 4) / (elapsedTime / 1000 / 60));
   }
 
   loadUpcomingWords() {
