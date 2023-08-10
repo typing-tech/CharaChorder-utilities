@@ -109,7 +109,6 @@ class ChordPractice {
     let totalWordsLabel = document.getElementById('total-words');
     let correctWordsLabel = document.getElementById('correct-words');
     let firstWordLabel = document.getElementById('first-word');
-    let wpmLabel = document.getElementById('wpm');
     if (answer.value.trim().toLowerCase() === this.currentWord.trim().toLowerCase()) {
       this.correctWords++;
       correctWordsLabel.style.color = '#4CAF50';
@@ -126,8 +125,6 @@ class ChordPractice {
     this.totalWords++;
     totalWordsLabel.textContent = this.totalWords;
     correctWordsLabel.textContent = this.correctWords;
-    wpmLabel.textContent = this.getWPM() + ' WPM';
-    wpmLabel.style.display = 'inline';
     document.getElementById('line').style.display = 'block';
     if (this.totalWords === maxWords) {
       this.showResults();
