@@ -160,8 +160,11 @@ class ChordPractice {
     header1.textContent = 'Word';
     const header2 = document.createElement('th');
     header2.textContent = 'Mistyped As';
+    const header3 = document.createElement('th');
+    header3.textContent = 'Chord';
     headerRow.appendChild(header1);
     headerRow.appendChild(header2);
+    headerRow.appendChild(header3);
     table.appendChild(headerRow);
 
     const mistypedArray = Object.entries(this.misTypedChords)
@@ -175,13 +178,17 @@ class ChordPractice {
       cell1.textContent = item.word;
       const cell2 = document.createElement('td');
       cell2.textContent = item.typedWords.join(', ');
+      const cell3 = document.createElement('td');
+      cell3.textContent = this.filterChords[item.word] || '';
       row.appendChild(cell1);
       row.appendChild(cell2);
+      row.appendChild(cell3);
       table.appendChild(row);
     });
 
     $('#mistyped-words').append(table);
   }
+
 
 
   loadUploadedChords() {
