@@ -186,6 +186,7 @@ class ChordPractice {
       table.appendChild(row);
     });
 
+    $('#mistyped-words').empty();
     $('#mistyped-words').append(table);
   }
 
