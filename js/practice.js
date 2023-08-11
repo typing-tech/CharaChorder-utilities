@@ -82,7 +82,9 @@ class ChordPractice {
     practiceWindow.style.display = 'block';
     this.totalWords = 0;
     this.correctWords = 0;
+    this.correctCharsCount = 0;
     this.upcomingWords = [];
+    this.misTypedChords = {};
     this.loadUpcomingWords();
     this.showQuestion();
     this.startTime = new Date();
