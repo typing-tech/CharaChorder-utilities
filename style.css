@@ -210,17 +210,17 @@ form label[for="minReps"] {
 }
 
 #progress-container {
-    width: 50%;
+    display: none;
     background-color: #ddd;
-    border-radius: 10px;
+    border-radius: 20px;
     margin: 0 auto;
 }
 
 #progress-bar {
     width: 0%;
-    height: 10px;
-    background-color: #4caf50;
-    border-radius: 10px;
+    height: 30px;
+    background-color: #43a047;
+    border-radius: 20px;
 }
 
 #progress-label {
@@ -231,7 +231,7 @@ form label[for="minReps"] {
 #slider-range-index,
 #slider-range-keys {
     width: 20%;
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 20px auto;
 }
 
@@ -242,6 +242,7 @@ form label[for="minReps"] {
 .tooltip {
     position: relative;
     display: inline-block;
+    margin-left: 1%;
 }
 
 .tooltip .tooltiptext {
@@ -292,10 +293,8 @@ form label[for="minReps"] {
     display: block;
     width: 20%;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 5px;
     border: 1px solid #ccc;
-    font-size: 16px;
-    /* margin: 0 auto; */
 }
 
 #textInput::placeholder {
