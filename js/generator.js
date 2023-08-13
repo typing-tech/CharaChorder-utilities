@@ -35,7 +35,7 @@ const KEY_FINGER_MAP = {
   "RH_RING_1": ['y', 's', ';'],
   "RH_PINKY": ['RIGHT_ALT']
 };
-const CONFLICTING_FINGER_GROUPS = {
+const CONFLICTING_FINGER_GROUPS_DOUBLE = {
   "LH_PINKY": ['LEFT_ALT', 'LH_PINKY_3D'],
   "LH_RING_1": [',', 'u', "'", 'LH_RING_1_3D'],
   "LH_MID_1": ['.', 'o', 'i', 'LH_MID_1_3D'],
@@ -47,12 +47,21 @@ const CONFLICTING_FINGER_GROUPS = {
   "RH_RING_1": ['y', 's', ';', 'RH_RING_1_3D'],
   "RH_PINKY": ['RIGHT_ALT', 'RH_PINKY_3D']
 };
+
+const CONFLICTING_FINGER_GROUPS_TRIPLE = {
+  "group_1": ['a', 'n', 'y'],
+  "group_2": ['r', 'o', "'"]
+}
+
 const CHORD_GENERATORS = [
   'onlyCharsGenerator',
   'useMirroredKeysGenerator',
   'useAltKeysGenerator',
   'use3dKeysGenerator'
 ];
+const UNUSABLE_CHORDS = {
+  "impulse_chord": ['DUP', 'i']
+};
 
 let minChordLength = 3;
 let maxChordLength = 6;
@@ -308,8 +317,13 @@ class ChordGenerator {
   }
 
   fingerConflict(chord) {
+    const sortedChord = [...chord].sort();
     if (this.hasDuplicates(chord)) return true;
-    return Object.values(CONFLICTING_FINGER_GROUPS).some((fingerKeys) => fingerKeys.filter((key) => chord.includes(key)).length > 1);
+    if (Object.values(CONFLICTING_FINGER_GROUPS_DOUBLE).some((fingerKeys) => fingerKeys.filter((key) => chord.includes(key)).length > 1)) return true;
+    if (Object.values(CONFLICTING_FINGER_GROUPS_TRIPLE).some((fingerKeys) => fingerKeys.filter((key) => chord.includes(key)).length > 2)) return true;
+    if (Object.values(UNUSABLE_CHORDS).some((fingerKeys) => JSON.stringify([...fingerKeys].sort()) === JSON.stringify(sortedChord))) return true;
+
+    return false;
   }
 
   hasDuplicates(chord) {
