@@ -227,7 +227,9 @@ form label[for="minReps"] {
     margin: 20px auto;
 }
 
-#slider-range {
+#slider-range,
+#slider-range-index,
+#slider-range-keys {
     width: 20%;
     border-radius: 5px;
     margin: 20px auto;
@@ -314,7 +316,7 @@ form label[for="minReps"] {
 }
 
 #toggles {
-    margin-left: 8%;
+    margin-left: 3%;
 }
 
 .switch {
@@ -378,4 +380,47 @@ input:checked+.toggle:after {
 
 #output-chord {
     margin-right: 15%;
+}
+
+#textInput {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;}
+
+#line {
+    border-top: 2px solid black;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#copy-chords {
+    width: 33.5%;
+    margin: 0 auto;
+    font-family: "Georgia", serif;
+    margin-bottom: 3%;
+    margin-right: 34.5%;
+    margin-top: 3%;
+}
+
+#start-practice-button {
+    font-family: "Georgia", serif;
+}
+
+#first-word {
+    color: #333;
+    margin-left: 20%;
+    font-size: 30px;
+}
+
+#other-words {
+    color: #999;
+    margin-left: 1%
+}
+
+#chord {
+    margin-top: 3%;
+}
+
+#input-area {
+    margin-top: 3%;
 }
