@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html>
-
+    
 <head>
     <title>Partial Anagrams</title>
+    <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+    <meta property="og:title" content="Partial Anagrams">
+    <meta property="og:description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+    <script src="js/main.js"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <header>
-        <h1>CharaChorder Utilities</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="count.html">Count Bigrams</a></li>
-                <li><a href="stats.html">Chord Stats</a></li>
-                <li><a href="chordfinder.html">ChordFinder</a></li>
-                <li><a href="partialanagrams.html">Anagrams</a></li>
-                <li><a href="practice.html">Practice</a></li>
-                <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>Partial Anagrams</h1>
-    <p>This utility helps you find partial anagrams which are often the chords you need to pay attention to because they
-        share the same unique letters (for example: tough, though, and thought).  Often you can use the Dup key to distinguish these, or some other mnemonic (tuf for tough).
-    </p>
-    <form>
-        <label for="textarea">Text to analyze:</label><br>
-        <textarea id="textarea" rows="10" cols="40"></textarea><br>
-        <br />
-        <button type="button" onclick="createPartialAnagramTable('results')">Find Partial Anagrams</button>
-    </form>
-    <div id="results"></div>
+    <header></header>
+    <div class="main-content">
+        <h1>Partial Anagrams</h1>
+        <p>This utility helps you find partial anagrams which are often the chords you need to pay attention to because they
+            share the same unique letters (for example: tough, though, and thought).  Often you can use the Dup key to distinguish these, or some other mnemonic (tuf for tough).
+        </p>
+        <form>
+            <label for="textarea">Text to analyze:</label><br>
+            <textarea id="textarea" rows="10" cols="40"></textarea><br>
+            <br />
+            <button type="button" onclick="createPartialAnagramTable('results')">Find Partial Anagrams</button>
+        </form>
+        <div id="results"></div>
+    </div>
     <script type='text/javascript' src='js/partial.js'></script>
     <script type='text/javascript' src='js/downloadTable.js'></script>
 </html>

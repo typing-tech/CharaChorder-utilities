@@ -1,9 +1,14 @@
-<!-- index.html -->
+<!DOCTYPE html>
 <html>
 
 <head>
   <title>CharaChorder Practice Chords</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+  <meta property="og:title" content="CharaChorder Utilities">
+  <meta property="og:description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+  <script src="js/main.js"></script>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -13,85 +18,74 @@
 </head>
 
 <body>
-  <header>
-    <h1 class="main-h1">CharaChorder Utilities</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="count.html">Count Bigrams</a></li>
-        <li><a href="stats.html">Chord Stats</a></li>
-        <li><a href="chordfinder.html">ChordFinder</a></li>
-        <li><a href="partialanagrams.html">Anagrams</a></li>
-        <li><a href="practice.html">Practice</a></li>
-        <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
-      </ul>
-    </nav>
-  </header>
-  <h1>CharaChorder Chord Pratice</h1>
-  <p class="note">
-  <ul>
-    <li><b>Note:</b> everything is done client-side and your chord map never leaves your browser.</li>
-  </ul>
-  </p>
-  <form id="practice-form">
-    <div>
-      <label for="chordFileInput" class="fileInputContainer">
-        Upload Chords
-      </label>
-      <input type="file" id="chordFileInput" style="display: none;" />
-      <div id="chordFileInputName" style="display: inline-block;"></div>
-      <div class="tooltip">
-        <i>ⓘ</i>
-        <span class="tooltiptext">
-          Browse for your chord csv export and either<br>
-          1. Click "Copy to clipboard for practice". Paste into the
-          "Custom" section of Monkeytype or CharaTyping and make sure to check the "Pipe Delimiter" checkbox.<br>
-          OR<br>
-          2. Click "Start Practice" to practice in this window.
-        </span>
-      </div>
-    </div>
-    <div id="filter-chords" style="display: none;">
-      <label>Filter Chords</label>
-      <div>Index Range</div>
-      <div id="slider-range-index"></div>
-      <div id="selected-values-index"></div>
-
-      <div style="margin-top: 5%;">Key Count Range</div>
-      <div id="slider-range-keys"></div>
-      <div id="selected-values-keys"></div>
-    </div>
-
-    <button type="button" id="copy-chords">Copy chords</button>
-    <button type="button" id="start-practice-button">Start Practice</button>
-
-    <div id="practice-window" style="display: none; white-space: nowrap;">
-      <label id="first-word" style="text-align: center; display: inline;"></label>
-      <label id="other-words" style="text-align: center; display: inline;"></label>
-      <label id="chord" style="display: none; text-align: center; color: #FF0000;"></label>
-      <div id="input-area" style="display: flex; align-items: center; justify-content: center;">
-        <input type="text" id="textInput" />
+  <header></header>
+  <div class="main-content">
+    <h1>CharaChorder Chord Pratice</h1>
+    <p class="note">
+    <ul>
+      <li><b>Note:</b> everything is done client-side and your chord map never leaves your browser.</li>
+    </ul>
+    </p>
+    <form id="practice-form">
+      <div>
+        <label for="chordFileInput" class="fileInputContainer">
+          Upload Chords
+        </label>
+        <input type="file" id="chordFileInput" style="display: none;" />
+        <div id="chordFileInputName" style="display: inline-block;"></div>
         <div class="tooltip">
           <i>ⓘ</i>
           <span class="tooltiptext">
-            Type the chord here(with space or enter) to submit. If you get it right, the next word will be displayed.
+            Browse for your chord csv export and either<br>
+            1. Click "Copy to clipboard for practice". Paste into the
+            "Custom" section of Monkeytype or CharaTyping and make sure to check the "Pipe Delimiter" checkbox.<br>
+            OR<br>
+            2. Click "Start Practice" to practice in this window.
           </span>
         </div>
       </div>
-      <label id="correct-words" style="text-align: center; margin-top: 5%; color:#4CAF50"></label>
-      <div id="line" style="display: none;"></div>
-      <label id="total-words" style="text-align: center; margin-top: 2%;"></label>
-    </div>
-    <div id="results-window">
-      <label id="result-wpm" style="text-align: center; margin-left: 1%;"></label>
-      <label id="result-accuracy" style="text-align: center; margin-left: 1%;"></label>
-      <div id="mistyped-words" ></div>
-    </div>
+      <div id="filter-chords" style="display: none;">
+        <label>Filter Chords</label>
+        <div>Index Range</div>
+        <div id="slider-range-index"></div>
+        <div id="selected-values-index"></div>
 
-    </div>
+        <div style="margin-top: 5%;">Key Count Range</div>
+        <div id="slider-range-keys"></div>
+        <div id="selected-values-keys"></div>
+      </div>
 
-  </form>
-  </br>
+      <button type="button" id="copy-chords">Copy chords</button>
+      <button type="button" id="start-practice-button">Start Practice</button>
+
+      <div id="practice-window" style="display: none; white-space: nowrap;">
+        <label id="first-word" style="text-align: center; display: inline;"></label>
+        <label id="other-words" style="text-align: center; display: inline;"></label>
+        <label id="chord" style="display: none; text-align: center; color: #FF0000;"></label>
+        <div id="input-area" style="display: flex; align-items: center; justify-content: center;">
+          <input type="text" id="textInput" />
+          <div class="tooltip">
+            <i>ⓘ</i>
+            <span class="tooltiptext">
+              Type the chord here(with space or enter) to submit. If you get it right, the next word will be displayed.
+            </span>
+          </div>
+        </div>
+        <label id="correct-words" style="text-align: center; margin-top: 5%; color:#4CAF50"></label>
+        <div id="line" style="display: none;"></div>
+        <label id="total-words" style="text-align: center; margin-top: 2%;"></label>
+      </div>
+      <div id="results-window">
+        <label id="result-wpm" style="text-align: center; margin-left: 1%;"></label>
+        <label id="result-accuracy" style="text-align: center; margin-left: 1%;"></label>
+        <div id="mistyped-words"></div>
+      </div>
+
+      </div>
+
+    </form>
+    </br>
+  </div>
 </body>
 
 </html>
