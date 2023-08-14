@@ -5,6 +5,12 @@ let maxIndex = 100000;
 let upcomingWordsLength = 5;
 let maxWords = 25;
 let maxMistypedWords = 10;
+const uncheckable_keys = [
+  'bksp', 'deldel', ' ', 'enter', 'lflf', 'rtrt',
+  'esc', 'arrow_up', 'arrow_dn', 'arrow_left', 'arrow_rt',
+  'pageup', 'pagedown', 'scrolllock', 'capslock', 'numlock', 'f1',
+  'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f11', 'f12'
+];
 
 function startPractice(event) {
   event.preventDefault();
@@ -214,7 +220,9 @@ class ChordPractice {
           if (parts.length === 2) {
             var chord = parts[0].trim().split(' + ');
             var word = parts[1].trim();
-            if (word.includes(' ')) { return; }
+            if (uncheckable_keys.some(key => word.toLowerCase().includes(key))) {
+              return;
+            }
             this.uploadedChords[word] = chord;
           }
         });
