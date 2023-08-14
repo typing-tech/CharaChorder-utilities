@@ -1,45 +1,37 @@
 <!DOCTYPE html>
 <html>
-
+    
 <head>
     <title>Calculate Bigram Frequency</title>
+    <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+    <meta property="og:title" content="Calculate Bigram Frequency">
+    <meta property="og:description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
+    <script src="js/main.js"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <header>
-        <h1>CharaChorder Utilities</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="count.html">Count Bigrams</a></li>
-                <li><a href="stats.html">Chord Stats</a></li>
-                <li><a href="chordfinder.html">ChordFinder</a></li>
-                <li><a href="partialanagrams.html">Anagrams</a></li>
-                <li><a href="practice.html">Practice</a></li>
-                <li><a href="chord-generator.html">CC1 Chord Generator</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>Calculate Bigram Frequency</h1>
-    <p>On your CharaChorder device you may want to choose uncommon bigrams when using 2 letter chords to avoid
-        accidentally
-        triggering them when you are using chentry (character entry). You can use this form to analyze some text and
-        find the
-        count of all the bigram pairs (since the order doesn't matter when it comes to chording).
-    </p>
-    <p>
-        You can sort the table by clicking on the header.
-    </p>
-    <form>
-        <label for="textarea">Text to analyze:</label><br>
-        <textarea id="textarea" rows="10" cols="40"></textarea><br>
-        <button type="button" onclick="calculateBigrams(true)">Show Bigrams Count Table</button>
-        <button type="button" onclick="createFrequencyTable()">Show Frequency Table</button>
-    </form>
-    <div id="bigram-counts-div"></div>
+    <header></header>
+    <div class="main-content">
+        <h1>Calculate Bigram Frequency</h1>
+        <p>On your CharaChorder device you may want to choose uncommon bigrams when using 2 letter chords to avoid
+            accidentally
+            triggering them when you are using chentry (character entry). You can use this form to analyze some text and
+            find the
+            count of all the bigram pairs (since the order doesn't matter when it comes to chording).
+        </p>
+        <p>
+            You can sort the table by clicking on the header.
+        </p>
+        <form>
+            <label for="textarea">Text to analyze:</label><br>
+            <textarea id="textarea" rows="10" cols="40"></textarea><br>
+            <button type="button" onclick="calculateBigrams(true)">Show Bigrams Count Table</button>
+            <button type="button" onclick="createFrequencyTable()">Show Frequency Table</button>
+        </form>
+        <div id="bigram-counts-div"></div>
+    </div>
     <script type='text/javascript' src='js/count.js'></script>
     <script type='text/javascript' src='js/downloadTable.js'></script>
-
 </html>
