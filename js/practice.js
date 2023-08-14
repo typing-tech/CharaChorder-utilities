@@ -5,7 +5,12 @@ let maxIndex = 100000;
 let upcomingWordsLength = 5;
 let maxWords = 25;
 let maxMistypedWords = 10;
-const uncheckable_keys = ['bksp', 'del', ' '];
+const uncheckable_keys = [
+  'bksp', 'del', ' ', 'enter', 'tab', 'alt', 'ctrl',
+  'esc', 'arrow_up', 'arrow_dn', 'arrow_left', 'arrow_rt',
+  'pageup', 'pagedown', 'scrolllock', 'capslock', 'numlock', 'f1',
+  'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f11', 'f12'
+];
 
 function startPractice(event) {
   event.preventDefault();
