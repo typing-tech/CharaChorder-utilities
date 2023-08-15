@@ -20,7 +20,9 @@ plotButton.addEventListener('click', () => {
             className: color
         };
     }));
-    const options = {};
+    const options = {
+        orientation: 'top'
+    };
     const timeline = new vis.Timeline(container, items, options);
 });
 resetButton.addEventListener('click', () => {
