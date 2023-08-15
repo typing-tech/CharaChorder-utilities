@@ -438,3 +438,28 @@ input:checked+.toggle:after {
 #input-area {
     margin-top: 3%;
 }
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#wrapper #visualization {
+    flex: 1 1;
+    min-height: 0px;
+}
+
+#visualization {
+    height: 100%;
+}
+
+.vis-item.green {
+    background-color: green;
+    border-color: green;
+}
+
+.vis-item.red {
+    background-color: red;
+    border-color: red;
+}
