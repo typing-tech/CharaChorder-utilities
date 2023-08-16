@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>CharaChorder Practice Chords</title>
+  <title>CharaChorder Practice</title>
   <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
   <meta property="og:title" content="CharaChorder Utilities">
   <meta property="og:description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
@@ -20,30 +20,26 @@
 <body>
   <header></header>
   <div class="main-content">
-    <h1>CharaChorder Chord Pratice</h1>
-    <p class="note">
-    <ul>
-      <li><b>Note:</b> everything is done client-side and your chord map never leaves your browser.</li>
-    </ul>
-    </p>
+    <h1>CharaChorder Practice</h1>
+    <details>
+      <summary>How to use:</summary>
+      <b>Note:</b> everything is done client-side and your chord map never leaves your browser.
+      </br>
+      Upload your chord csv file exported from Dot I/O <a href="https://www.iq-eq.io/#/manager">here</a>.
+      <br>
+      Click "Copy to clipboard for practice". Paste into the "Custom" section
+      of <a href="https://monkeytype.com/">monkeytype</a> or <a href="https://charatyping.com/">CharaTyping</a> and make sure to check the "Pipe Delimiter"
+      checkbox.<br>
+      - OR - <br>
+      Click "Start Practice" to practice in this window.
+    </details>
     <form id="practice-form">
       <div>
-        <label for="chordFileInput" class="fileInputContainer">
-          Upload Chords
-        </label>
+        <button type="button" id="uploadButton" class="fileInputContainer">Upload chords</button>
         <input type="file" id="chordFileInput" style="display: none;" />
         <div id="chordFileInputName" style="display: inline-block;"></div>
-        <div class="tooltip">
-          <i>ⓘ</i>
-          <span class="tooltiptext">
-            Browse for your chord csv export and either<br>
-            1. Click "Copy to clipboard for practice". Paste into the
-            "Custom" section of Monkeytype or CharaTyping and make sure to check the "Pipe Delimiter" checkbox.<br>
-            OR<br>
-            2. Click "Start Practice" to practice in this window.
-          </span>
-        </div>
       </div>
+      <br>
       <div id="filter-chords" style="display: none;">
         <label>Filter Chords</label>
         <div>Index Range</div>
@@ -81,10 +77,10 @@
         <div id="mistyped-words"></div>
       </div>
 
-      </div>
+  </div>
 
-    </form>
-    </br>
+  </form>
+  </br>
   </div>
 </body>
 

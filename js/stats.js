@@ -91,7 +91,7 @@ document.getElementById("calculateStats").addEventListener("click", function () 
 
 
         var uniquechordMapsCount = Object.keys(chordMapCounts).length;
-        document.getElementById("stats").innerHTML = "<button id='downloadBanner' type='button' style='margin-top:5px'>Download Discord banner</button><h3>Statistics</h3>" + "Number of chords: " + rows.length + "<br>Number of unique words chorded: " + uniquechordMapsCount +
+        document.getElementById("stats").innerHTML = "<button id='downloadBanner' type='button' style='margin-top:5px'>Copy Discord banner to clipboard</button><h3>Statistics</h3>" + "Number of chords: " + rows.length + "<br>Number of unique words chorded: " + uniquechordMapsCount +
             "<br>" + summaryTable + "<br>" + wordFrequencyTable + "<br>Duplicate words: " + dupWords.join(', ');
         addCSVButton("letterCounts", "Letter Counts");
         addCSVButton("chordLengths", "Chord Lengths");

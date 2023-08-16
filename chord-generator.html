@@ -15,53 +15,31 @@
     <header></header>
     <div class="main-content">
         <h1>CharaChorder One Chord Generator</h1>
+        <details>
+            <summary>How to use:</summary>
+            You can type individual words here separated by a comma sorted by priority order into the first box, or you
+            can upload a .txt file with words, each one on its own line, sorted by priority order. In both cases, words
+            at the front or top of the list get shorter chord inputs.
+            <br>
+            Upload existing chord library(.csv) exported from <a href="https://www.iq-eq.io/#/manager">Dot I/O</a>
+            optionally to not conflict generated chords with existing chords in your library.
+        </details>
+        <br>
         <form>
             <div style="display: flex; align-items: center; justify-content: center;">
                 <input type="text" id="textInput" placeholder="Enter word(s) here" />
-                <div class="tooltip">
-                    <i>ⓘ</i>
-                    <span class="tooltiptext">
-                        You can type individual words here separated by a comma sorted by priority order (ie words at
-                        the
-                        beginning of
-                        the list get preference to shorter chord inputs).
-                    </span>
-                </div>
             </div>
             <p id="or-label" style="text-align: center;">OR</p>
             <div>
-                <label for="wordFileInput" class="fileInputContainer">
-                    Upload Words
-                </label>
+                <button type="button" id="uploadWordsButton" class="fileInputContainer">Upload Words</button>
                 <input type="file" id="wordFileInput" style="display: none;" />
                 <div id="wordFileInputName" style="display: inline-block;"></div>
-                <div class="tooltip">
-                    <i>ⓘ</i>
-                    <span class="tooltiptext">
-                        To use this tool, upload a .txt file with words, each one on its own line, sorted by priority
-                        order
-                        (ie
-                        words at the top of the list get preference to shorter chord inputs).
-                    </span>
-                </div>
             </div>
             <div>
-                <label for="chordFileInput" class="fileInputContainer">
-                    Upload Chords
-                </label>
+                <button type="button" id="uploadChordsButton" class="fileInputContainer">Upload Chords</button>
                 <input type="file" id="chordFileInput" style="display: none;" />
                 <div id="chordFileInputName" style="display: inline-block;"></div>
-                <div class="tooltip">
-                    <i>ⓘ</i>
-                    <span class="tooltiptext">
-                        Upload existing chord library(.csv) optionally to not conflict generated chords with existing
-                        chords
-                        in
-                        your library.
-                    </span>
-                </div>
             </div>
-
             <div>Select number of chord keys</div>
             <div id="slider-range"></div>
             <div id="selected-values">Selected range: 3 - 6</div>

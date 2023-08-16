@@ -266,6 +266,9 @@ class ChordPractice {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById("uploadButton").addEventListener("click", function () {
+    document.getElementById("chordFileInput").click();
+  });
   document.getElementById('start-practice-button').addEventListener('click', startPractice);
   document.getElementById('copy-chords').addEventListener('click', copyToClipboard);
   document.getElementById('chordFileInput').addEventListener('change', function () {

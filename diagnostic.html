@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <title>Chord Timing Diagnostic</title>
+    <title>Chord Timing Diagnostic Tool</title>
     <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
-    <meta property="og:title" content="Chord Timing Diagnostic">
+    <meta property="og:title" content="Chord Timing Diagnostic Tool">
     <meta property="og:description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
     <script src="js/main.js"></script>
     <meta charset="UTF-8">
@@ -17,24 +17,19 @@
     <header></header>
     <div class="main-content">
         <h1>Chord Timing Diagnostic</h1>
-        <p>
-            Sometimes it can be helpful to try to look closer at the timing thatyou are pressing and releasing keys to
-            diganose what you might be doing wrong in a chord if it isn't triggering. This tool, developed by Tangent
-            Chang (andy23512) on the CharaChorder Discord can help with that.
-
+        <details>
+            <summary>How to use:</summary>
+            This tool helps look at the press and release timings of a chord.
             You may need to zoom out then scroll horizontally to see the timings.
-        </p>
+            To use, try to chord the word in the input box and then press plot button.
+            </br>
+            This tool was developed by Tangent Chang (andy23512) on the CharaChorder Discord.
+        </details>
         <div id="wrapper">
             <div id="controls">
                 <input type="text">
-                <div class="tooltip">
-                    <i>ⓘ</i>
-                    <span class="tooltiptext">
-                        Try to chord the word in this box and then press the Plot button.
-                    </span>
-                </div>
-                <button id="plot">Plot</button>
-                <button id="reset">Reset</button>
+                <button type="button" id="plot">Plot</button>
+                <button type="button" id="reset">Reset</button>
             </div>
             <div id="visualization"></div>
         </div>

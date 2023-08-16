@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    
+
 <head>
     <title>Calculate Bigram Frequency</title>
     <meta name="description" content="CharaChorder Utilities is a set of tools for CharaChorder users.">
@@ -15,17 +15,19 @@
     <header></header>
     <div class="main-content">
         <h1>Calculate Bigram Frequency</h1>
-        <p>On your CharaChorder device you may want to choose uncommon bigrams when using 2 letter chords to avoid
-            accidentally
-            triggering them when you are using chentry (character entry). You can use this form to analyze some text and
-            find the
-            count of all the bigram pairs (since the order doesn't matter when it comes to chording).
-        </p>
-        <p>
+        <details>
+            <summary>How to use:</summary>
+            On your CharaChorder device you may want to choose uncommon bigrams
+            when using 2 letter chords to avoid accidentally triggering them
+            when you are using chentry (character entry). You can use this form
+            to analyze some text and find thecount of all the bigram pairs
+            (since the order doesn't matter when it comes to chording).
+            </br>
             You can sort the table by clicking on the header.
-        </p>
+        </details>
+        <br>
         <form>
-            <label for="textarea">Text to analyze:</label><br>
+            <label for="textarea">Text to analyze:</label>
             <textarea id="textarea" rows="10" cols="40"></textarea><br>
             <button type="button" onclick="calculateBigrams(true)">Show Bigrams Count Table</button>
             <button type="button" onclick="createFrequencyTable()">Show Frequency Table</button>
@@ -34,4 +36,5 @@
     </div>
     <script type='text/javascript' src='js/count.js'></script>
     <script type='text/javascript' src='js/downloadTable.js'></script>
+
 </html>

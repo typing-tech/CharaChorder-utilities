@@ -376,6 +376,14 @@ $(function () {
   });
 });
 
+document.getElementById("uploadWordsButton").addEventListener("click", function () {
+  document.getElementById("wordFileInput").click();
+});
+
+document.getElementById("uploadChordsButton").addEventListener("click", function () {
+  document.getElementById("chordFileInput").click();
+});
+
 document.getElementById('wordFileInput').addEventListener('change', function () {
   document.getElementById('wordFileInputName').textContent = this.files[0].name;
 });
