@@ -6,8 +6,10 @@ input.addEventListener('keyup', (event) => {
 input.addEventListener('keydown', (event) => {
     events.push({ event, time: performance.now() });
 });
+
 const plotButton = document.querySelector('#plot');
 const resetButton = document.querySelector('#reset');
+
 plotButton.addEventListener('click', () => {
     const container = document.getElementById('visualization');
     container.replaceChildren();
@@ -21,9 +23,10 @@ plotButton.addEventListener('click', () => {
         };
     }));
     const options = {
-        orientation: 'top', 
-        align: `left`,
-        order: (a,b) => b.time - a.time
+        orientation: 'top',
+        align: 'left',
+        order: (a, b) => b.time - a.time,
+        timeAxis: { scale: 'millisecond', step: 10  }
     };
     const timeline = new vis.Timeline(container, items, options);
 });
