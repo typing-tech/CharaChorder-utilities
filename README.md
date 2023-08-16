@@ -2,7 +2,7 @@
 
 Welcome to the CharaChorder Utilities project! This project contains a set of tools for CharaChorder users. 
 
-The best way to check them out is just by visitng the site here: [CharaChorder Utilities](https://typing-tech.github.io/CharaChorder-utilities/).
+The best way to check them out is just by visiting the site here: [CharaChorder Utilities](https://typing-tech.github.io/CharaChorder-utilities/).
 
 ## Contributing
 
