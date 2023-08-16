@@ -21,7 +21,9 @@ plotButton.addEventListener('click', () => {
         };
     }));
     const options = {
-        orientation: 'top'
+        orientation: 'top', 
+        align: `left`,
+        order: (a,b) => b.time - a.time
     };
     const timeline = new vis.Timeline(container, items, options);
 });
