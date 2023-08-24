@@ -153,7 +153,6 @@ header {
     color: white;
     padding: 20px;
     text-align: left;
-    height: 100vh;
     width: 200px; /* Example fixed width */
 }
 
@@ -477,6 +476,7 @@ summary {
 
 #visualization {
     height: 100%;
+    text-align: left;
 }
 
 .vis-item.green {
