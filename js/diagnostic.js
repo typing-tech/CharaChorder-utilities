@@ -33,15 +33,23 @@ plotButton.addEventListener('click', () => {
     const tableBody = document.getElementById('table-body');
     tableBody.innerHTML = '';
 
+    let startTime = null; 
     events.forEach(({ event, time }) => {
+        if (startTime === null) {
+            startTime = time;
+        }
+        const relativeTime = time - startTime;
+
         const row = tableBody.insertRow();
         const eventCell = row.insertCell(0);
         const codeCell = row.insertCell(1);
         const timeCell = row.insertCell(2);
 
-        eventCell.innerHTML = event.type;
+        const eventType = event.type === 'keydown' ? 'press' : 'release'; // Replace "keydown" with "press" and "keyup" with "release"
+
+        eventCell.innerHTML = eventType;
         codeCell.innerHTML = event.code;
-        timeCell.innerHTML = time.toFixed(2) + ' ms';
+        timeCell.innerHTML = relativeTime.toFixed(2) + ' ms';
     });
 
     // Filter the events to only include those before the first Backspace
