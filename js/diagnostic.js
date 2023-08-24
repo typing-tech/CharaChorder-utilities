@@ -44,6 +44,45 @@ plotButton.addEventListener('click', () => {
         timeCell.innerHTML = time.toFixed(2) + ' ms';
     });
 
+    // Filter the events to only include those before the first Backspace
+    const filteredEvents = [];
+    for (const eventObj of events) {
+        if (eventObj.event.code === 'Backspace') break; // Stop processing after the first Backspace
+        filteredEvents.push(eventObj);
+    }
+
+    let firstPressTime = null;
+    let lastPressTime = null;
+    let firstReleaseTime = null;
+    let lastReleaseTime = null;
+
+    filteredEvents.forEach(({ event, time }) => {
+        if (event.type === 'keydown') {
+            if (firstPressTime === null) {
+                firstPressTime = time;
+            }
+            lastPressTime = time;
+        } else if (event.type === 'keyup') {
+            if (firstReleaseTime === null) {
+                firstReleaseTime = time;
+            }
+            lastReleaseTime = time;
+        }
+    });
+
+    const pressDifference = lastPressTime !== null && firstPressTime !== null
+        ? (lastPressTime - firstPressTime).toFixed(2) + ' ms'
+        : 'N/A';
+
+    const releaseDifference = lastReleaseTime !== null && firstReleaseTime !== null
+        ? (lastReleaseTime - firstReleaseTime).toFixed(2) + ' ms'
+        : 'N/A';
+
+    document.getElementById('press-message').innerText =
+        'The time between the first and last press was ' + pressDifference + '.';
+    document.getElementById('release-message').innerText =
+        'The time between the first and last release was ' + releaseDifference + '.';
+
 });
 resetButton.addEventListener('click', () => {
     const container = document.getElementById('visualization');
