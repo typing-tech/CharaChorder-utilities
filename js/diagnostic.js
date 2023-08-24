@@ -26,9 +26,24 @@ plotButton.addEventListener('click', () => {
         orientation: 'top',
         align: 'left',
         order: (a, b) => b.time - a.time,
-        timeAxis: { scale: 'millisecond', step: 10  }
+        timeAxis: { scale: 'millisecond', step: 10 }
     };
     const timeline = new vis.Timeline(container, items, options);
+
+    const tableBody = document.getElementById('table-body');
+    tableBody.innerHTML = '';
+
+    events.forEach(({ event, time }) => {
+        const row = tableBody.insertRow();
+        const eventCell = row.insertCell(0);
+        const codeCell = row.insertCell(1);
+        const timeCell = row.insertCell(2);
+
+        eventCell.innerHTML = event.type;
+        codeCell.innerHTML = event.code;
+        timeCell.innerHTML = time.toFixed(2) + ' ms';
+    });
+
 });
 resetButton.addEventListener('click', () => {
     const container = document.getElementById('visualization');

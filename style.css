@@ -488,3 +488,19 @@ summary {
     background-color: red;
     border-color: red;
 }
+
+#timing-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#timing-table th,
+#timing-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+#timing-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
