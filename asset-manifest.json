@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/charachorder-utilities/static/css/main.43145ce8.css",
-    "main.js": "/charachorder-utilities/static/js/main.55fea8f8.js",
+    "main.js": "/charachorder-utilities/static/js/main.75623f54.js",
     "static/media/bigrams.png": "/charachorder-utilities/static/media/bigrams.c07f96ae973020b597d9.png",
     "static/media/anagrams.png": "/charachorder-utilities/static/media/anagrams.938075ccc56ce7c4c428.png",
     "worker.js": "/charachorder-utilities/2324aafef9aea4d5ebf9.worker.js",
     "index.html": "/charachorder-utilities/index.html",
     "main.43145ce8.css.map": "/charachorder-utilities/static/css/main.43145ce8.css.map",
-    "main.55fea8f8.js.map": "/charachorder-utilities/static/js/main.55fea8f8.js.map"
+    "main.75623f54.js.map": "/charachorder-utilities/static/js/main.75623f54.js.map"
   },
   "entrypoints": [
     "static/css/main.43145ce8.css",
-    "static/js/main.55fea8f8.js"
+    "static/js/main.75623f54.js"
   ]
 }
