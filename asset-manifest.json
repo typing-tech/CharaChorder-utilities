@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/CharaChorder-utilities/static/css/main.43145ce8.css",
-    "main.js": "/CharaChorder-utilities/static/js/main.2117dda1.js",
+    "main.js": "/CharaChorder-utilities/static/js/main.8ebf3774.js",
     "static/media/bigrams.png": "/CharaChorder-utilities/static/media/bigrams.c07f96ae973020b597d9.png",
     "static/media/anagrams.png": "/CharaChorder-utilities/static/media/anagrams.938075ccc56ce7c4c428.png",
-    "worker.js": "/CharaChorder-utilities/e9b96f9ee3dec9b2864e.worker.js",
+    "worker.js": "/CharaChorder-utilities/9d32b68102d356ffdeea.worker.js",
     "index.html": "/CharaChorder-utilities/index.html",
     "main.43145ce8.css.map": "/CharaChorder-utilities/static/css/main.43145ce8.css.map",
-    "main.2117dda1.js.map": "/CharaChorder-utilities/static/js/main.2117dda1.js.map"
+    "main.8ebf3774.js.map": "/CharaChorder-utilities/static/js/main.8ebf3774.js.map"
   },
   "entrypoints": [
     "static/css/main.43145ce8.css",
-    "static/js/main.2117dda1.js"
+    "static/js/main.8ebf3774.js"
   ]
 }
