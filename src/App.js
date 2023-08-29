@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container, Box } from '@mui/material';
 import ButtonAppBar from './components/ButtonAppBar';
 import ChordTools from './pages/ChordTools';
@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <Container maxWidth="xl">
-      <Router>
+      <Router basename="/">
         <ButtonAppBar chordLibrary={chordLibrary} setChordLibrary={setChordLibrary} />
         <Box sx={{ my: 4 }}>
           <Routes>
