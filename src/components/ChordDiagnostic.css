@@ -1,0 +1,38 @@
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+#wrapper #visualization {
+    flex: 1 1;
+    min-height: 0px;
+    min-width: 100%;
+}
+
+#visualization {
+    height: 100%;
+    text-align: left;
+}
+
+.vis-item.green {
+    background-color: green;
+    border-color: green;
+}
+
+.vis-item.red {
+    background-color: red;
+    border-color: red;
+}
+
+#timing-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#timing-table th {
+    padding: 8px;
+    text-align: left;
+    font-weight: bold;
+}
