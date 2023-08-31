@@ -22,7 +22,7 @@ function Practice({ chordLibrary }) {
 
     const inputRef = useRef(null);
 
-    const numberOfTargetChords = 10;
+    const numberOfTargetChords = 5;
     const uncheckable_keys = [
         'bksp', 'deldel', ' ', 'enter', 'lflf', 'rtrt',
         'esc', 'arrow_up', 'arrow_dn', 'arrow_left', 'arrow_rt',
@@ -266,7 +266,7 @@ function Practice({ chordLibrary }) {
                                         }
                                     }}
                                     disabled={timerActive}
-                                    style={{ width: "50%" }}
+                                    style={{ width: "100%" }}
                                 />
                             </Grid>
                             <Grid item xs={6}>

@@ -92,16 +92,18 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
                         </Typography>
 
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="large"
-                                aria-label="settings menu"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                color="inherit"
-                            >
-                                <MenuIcon />
-                            </IconButton>
+                            <Tooltip title="Open menu">
+                                <IconButton
+                                    size="large"
+                                    aria-label="settings menu"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleOpenNavMenu}
+                                    color="inherit"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Menu
                                 id="menu-appbar"
                                 anchorEl={anchorElNav}
@@ -121,7 +123,7 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
                                 }}
                             >
                                 {pages.map((page) => (
-                                    <Button key={page} component={Link} to={`/${page.toLowerCase().replace(' ', '-')}`} sx={{ my: 2, color: 'white', display: 'block' }}>
+                                    <Button key={page} component={Link} to={`/${page.toLowerCase().replace(' ', '-')}`} sx={{ my: 2, display: 'block' }}>
                                         {page}
                                     </Button>
                                 ))}
@@ -144,7 +146,7 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
                                 textDecoration: 'none',
                             }}
                         >
-                            CharaChorder Utilities
+                            CC Utilities
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page) => (
@@ -155,7 +157,11 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
                         </Box>
                         <Typography
                             variant="body1"
-                            sx={{ color: 'white', marginRight: '16px' }}
+                            sx={{ 
+                                color: 'white',
+                                marginRight: '16px',
+                                display: {xs: 'none', md: 'flex'}
+                             }}
                         >
                             Chords: {chordLibrary.length}
                         </Typography>
