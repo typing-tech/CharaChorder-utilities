@@ -15,6 +15,7 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [openModal, setOpenModal] = React.useState(false);
     const [selectedFile, setSelectedFile] = React.useState(null);
+    const [chordInfoMessage, setChordInfoMessage] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -40,31 +41,47 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
         setOpenModal(false);
     };
 
+    const parseChordsFromCSV = (file, callback) => {
+        Papa.parse(file, {
+            complete: function (results) {
+                const chords = results.data.reduce((acc, row) => {
+                    if (row.length >= 2) {
+                        let [chordInput, chordOutput] = row;
+                        if (typeof chordOutput !== 'undefined') {
+                            chordOutput = chordOutput.replace(/Space/g, " ");
+                            acc.push({ chordInput, chordOutput });
+                        }
+                    }
+                    return acc;
+                }, []);
+                callback(chords);
+            }
+        });
+    };
+
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
+        if (e.target.files[0]) {
+            parseChordsFromCSV(e.target.files[0], (chords) => {
+                if (chords.length === 0) {
+                    setChordInfoMessage("The chord file is either invalid or empty.  Make sure on Dot I/O to first 'Read chords from device' and then export. ");
+                } else {
+                    setChordInfoMessage(`Parsed ${chords.length} chords from the file.`);
+                }
+            });
+        }
     };
+
 
     const handleFileUpload = () => {
         if (selectedFile) {
-            Papa.parse(selectedFile, {
-                complete: function (results) {
-                    const chords = results.data.reduce((acc, row) => {
-                        if (row.length >= 2) {
-                            let [chordInput, chordOutput] = row;
-
-                            if (typeof chordOutput !== 'undefined') {
-                                chordOutput = chordOutput.replace(/Space/g, " ");
-                                acc.push({ chordInput, chordOutput });
-                            }
-                        }
-                        return acc;
-                    }, []);
-
+            parseChordsFromCSV(selectedFile, (chords) => {
+                if (chords.length > 0) {
                     setChordLibrary(chords);
                 }
             });
         }
-
+        setChordInfoMessage(null);
         handleCloseModal();
     };
 
@@ -204,6 +221,9 @@ function ButtonAppBar({ chordLibrary, setChordLibrary }) {
                 <DialogContent>
                     <DialogContentText>Browse for your exported Chord Library from <a href="http://www.iq-eq.io/#/manager">Dot I/O</a> for use in the Chord Tools and Practice.</DialogContentText>
                     <Input type="file" accept=".csv" onChange={handleFileChange} />
+                    <Typography variant="body2" color={(chordInfoMessage && chordInfoMessage.includes('invalid')) ? 'error' : 'textPrimary'}>
+                        {chordInfoMessage}
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseModal} color="primary">Cancel</Button>
