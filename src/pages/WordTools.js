@@ -9,6 +9,7 @@ import anagrams from '../assets/anagrams.png';
 import wordsPng from '../assets/words.png';
 import phrasesPng from '../assets/phrases.png';
 import AnagramWorker from 'workerize-loader!../functions/anagramWorker'; // eslint-disable-line import/no-webpack-loader-syntax
+import createCsv from '../functions/createCsv';
 
 function WordTools({ chordLibrary = [], setChordLibrary }) {
     const [textToAnalyze, setTextToAnalyze] = useState('');
@@ -89,6 +90,18 @@ function WordTools({ chordLibrary = [], setChordLibrary }) {
         setCommonPhrases(phrases);
         setShowResults(true);
     };
+
+    const downloadCsv = (words) => {
+        const csvData = words.map(([word, frequency]) => {
+            return {
+                Word: word,
+                Frequency: frequency,
+                Score: word.length * frequency,
+            };
+        });
+
+        createCsv(csvData, 'words.csv', true);
+    }
 
     return (
         <div>
@@ -307,6 +320,9 @@ function WordTools({ chordLibrary = [], setChordLibrary }) {
                                         ? `You have chords for ${Math.round((chordWordCount / uniqueWordCount) * 100)}% (${chordWordCount} / ${uniqueWordCount}) of the unique words in the text (case insensitive).`
                                         : `There are ${uniqueWordCount} unique words in the text (case insensitive).`}
                                 </Typography>
+                                <Button variant="contained" color="secondary" style={{ marginLeft: "10px" }} onClick={() => downloadCsv(sortedWords)}>
+                                    Download CSV
+                                </Button>
                                 <TableContainer>
                                     <Table>
                                         <TableHead>
