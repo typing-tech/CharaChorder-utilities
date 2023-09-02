@@ -6,14 +6,20 @@ import {
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
-import { generateChords } from '../functions/chordGeneration'
+import LinearWithValueLabel from '../components/LinearWithValueLabel';
 import Papa from 'papaparse';
 import english500 from '../words/english-500.json';
 import english1000 from '../words/english-1000.json';
 import english5000 from '../words/english-5000.json';
+import ChordWorker from 'workerize-loader!../functions/chordGenerationWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 function CC1ChordGenerator({ chordLibrary }) {
+    const [generatingChords, setGeneratingChords] = useState(false);
+    const [generationProgress, setGenerationProgress] = useState(0);
     const [createdChords, setCreatedChords] = useState({});
+    const [failedWords, setFailedWords] = useState([]);
+    const [skippedWordCount, setSkippedWordCount] = useState([]);
+
     const [inputWords, setInputWords] = useState('');
     const [sliderValue, setSliderValue] = useState([3, 6]);
     const [checkboxStates, setCheckboxStates] = useState({
@@ -21,8 +27,8 @@ function CC1ChordGenerator({ chordLibrary }) {
         useMirroredKeys: true,
         useAltKeys: false,
         use3dKeys: false,
-        createCsv: false,
     });
+    const chordGeneratorWorker = new ChordWorker();
 
     // CSV state
     const [csvWords, setCsvWords] = useState([]);
@@ -33,7 +39,6 @@ function CC1ChordGenerator({ chordLibrary }) {
         Papa.parse(file, {
             complete: function (results) {
                 const wordsFromCsv = results.data.map(row => row[0]).filter(Boolean);
-                console.log(wordsFromCsv)
                 setCsvWords(wordsFromCsv);
                 setIsFileUploaded(true);
             }
@@ -42,7 +47,7 @@ function CC1ChordGenerator({ chordLibrary }) {
     const fileInputRef = useRef(null);
 
     // Word set dropdown state
-    const [selectedWordSet, setSelectedWordSet] = useState(null);
+    const [selectedWordSet, setSelectedWordSet] = useState('');
 
     const clearCsv = () => {
         setNumRowsToUse(0);
@@ -74,9 +79,30 @@ function CC1ChordGenerator({ chordLibrary }) {
 
     const handleClick = async () => {
         const wordsArray = csvWords.length > 0 ? csvWords.slice(0, numRowsToUse) : inputWords.split(',').map(word => word.trim());
-        const generatedChords = await generateChords(wordsArray, sliderValue, checkboxStates, chordLibrary);
-        setCreatedChords(generatedChords);
+        setGeneratingChords(true);
+        chordGeneratorWorker.postMessage({
+            type: 'generateChords',
+            wordsArray: wordsArray,
+            sliderValue: sliderValue,
+            checkboxStates: checkboxStates,
+            chordLibrary: chordLibrary
+        });
     };
+
+    chordGeneratorWorker.addEventListener('message', (event) => {
+        if (event.data.type === 'progress') {
+            setGenerationProgress(event.data.progress);
+        }
+        if (event.data.type === 'result') {
+            let cChords = event.data.result.usedChords;
+            let skippedChords = event.data.result.skippedWordCount
+            let fWords = event.data.result.failedWords;
+            setFailedWords(fWords);
+            setSkippedWordCount(skippedChords);
+            setCreatedChords(cChords);
+            setGeneratingChords(false);
+        }
+    });
 
     const wordSets = {
         'english500': english500.words,
@@ -91,7 +117,23 @@ function CC1ChordGenerator({ chordLibrary }) {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [csvWords, selectedWordSet ]);
+    }, [csvWords, selectedWordSet]);
+
+    const createCsv = (chords) => {
+        let csvContent = Object.entries(chords)
+            .map(([word, chord]) => `${chord.join(' + ')},${word}`)
+            .join('\n');
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "chords.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
     const createdChordsArray = Object.entries(createdChords);
 
@@ -118,6 +160,7 @@ function CC1ChordGenerator({ chordLibrary }) {
                             InputProps={{
                                 inputProps: {
                                     min: 0,
+                                    step: 50,
                                     max: csvWords.length
                                 }
                             }}
@@ -126,8 +169,6 @@ function CC1ChordGenerator({ chordLibrary }) {
                             Clear File
                         </Button>
                     </>
-
-
                 )}
             </Box>
 
@@ -166,7 +207,7 @@ function CC1ChordGenerator({ chordLibrary }) {
                 </MenuItem>
                 <MenuItem value="english500">Top 500 English Words</MenuItem>
                 <MenuItem value="english1000">Top 1000 English Words</MenuItem>
-                <MenuItem value="english5000">Top 5000 English Words</MenuItem>
+                {/* <MenuItem value="english5000">Top 5000 English Words</MenuItem> */}
             </Select>
 
             <Divider style={{ margin: '20px 0' }}></Divider>
@@ -181,7 +222,7 @@ function CC1ChordGenerator({ chordLibrary }) {
             />
             <Typography id="selected-values">Selected range: {sliderValue[0]} - {sliderValue[1]}</Typography>
             <div id="toggles">
-                {["useDupKey", "useMirroredKeys", "useAltKeys", "use3dKeys", "createCsv"].map((key) => (
+                {["useDupKey", "useMirroredKeys", "useAltKeys", "use3dKeys"].map((key) => (
                     <FormControlLabel
                         control={
                             <Switch
@@ -198,24 +239,58 @@ function CC1ChordGenerator({ chordLibrary }) {
             <Button variant="contained" color="primary" onClick={handleClick}>
                 Generate Chords
             </Button>
-            <Table style={{ width: '50%' }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Word</TableCell>
-                        <TableCell>Chord</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {createdChordsArray.map(([word, chord], index) => {
-                        return (
-                            <TableRow key={index}>
-                                <TableCell>{word}</TableCell>
-                                <TableCell>{chord.join(' + ')}</TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
+            {
+                generatingChords && (
+                    <>
+                        <Typography variant="h6">Generating chords</Typography>
+                        <LinearWithValueLabel value={generationProgress} />
+                    </>
+                )
+            }
+
+            {
+                (createdChordsArray.length > 0) && (
+                    <>
+                        <Button variant="contained" color="secondary" style={{ marginLeft: "10px" }} onClick={() => createCsv(createdChords)}>
+                            Download CSV
+                        </Button>
+                        {
+                            (skippedWordCount > 0) && (
+                                <>
+                                    <Typography>{skippedWordCount} words were already in your chord library and were skipped.</Typography>
+                                </>
+                            )
+                        }
+                        {
+                            (failedWords.length > 0) && (
+                                <>
+                                    <Typography>There were several words where valid chords were not generated: {failedWords.join(', ')}</Typography>
+                                </>
+                            )
+                        }
+                        <Table style={{ width: '50%' }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Word</TableCell>
+                                    <TableCell>Chord</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {createdChordsArray.map(([word, chord], index) => {
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>{word}</TableCell>
+                                            <TableCell>{chord.join(' + ')}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </>
+
+                )
+            }
+
         </div >
     );
 }
