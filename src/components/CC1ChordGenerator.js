@@ -12,6 +12,7 @@ import english500 from '../words/english-500.json';
 import english1000 from '../words/english-1000.json';
 import english5000 from '../words/english-5000.json';
 import ChordWorker from 'workerize-loader!../functions/chordGenerationWorker'; // eslint-disable-line import/no-webpack-loader-syntax
+import createCsv from '../functions/createCsv';
 
 function CC1ChordGenerator({ chordLibrary }) {
     const [generatingChords, setGeneratingChords] = useState(false);
@@ -119,20 +120,13 @@ function CC1ChordGenerator({ chordLibrary }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [csvWords, selectedWordSet]);
 
-    const createCsv = (chords) => {
-        let csvContent = Object.entries(chords)
-            .map(([word, chord]) => `${chord.join(' + ')},${word}`)
-            .join('\n');
+    const downloadCsv = (chords) => {
+        const dataArray = Object.entries(chords).map(([word, chord]) => ({
+            chord: chord.join(' + '),
+            word
+        }));
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "chords.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        createCsv(dataArray, 'chords.csv', false);
     }
 
     const createdChordsArray = Object.entries(createdChords);
@@ -252,7 +246,7 @@ function CC1ChordGenerator({ chordLibrary }) {
             {
                 (createdChordsArray.length > 0) && (
                     <>
-                        <Button variant="contained" color="secondary" style={{ marginLeft: "10px" }} onClick={() => createCsv(createdChords)}>
+                        <Button variant="contained" color="secondary" style={{ marginLeft: "10px" }} onClick={() => downloadCsv(createdChords)}>
                             Download CSV
                         </Button>
                         <Typography variant="h6">Results</Typography>
