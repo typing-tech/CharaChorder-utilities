@@ -194,21 +194,22 @@ function CC1ChordGenerator({ chordLibrary }) {
                             )
                         }}
                     />
+                    <Select
+                        value={selectedWordSet}
+                        onChange={(e) => setSelectedWordSet(e.target.value)}
+                        displayEmpty
+                    >
+                        <MenuItem value="" disabled>
+                            Select a word set
+                        </MenuItem>
+                        <MenuItem value="english500">Top 500 English Words</MenuItem>
+                        <MenuItem value="english1000">Top 1000 English Words</MenuItem>
+                        {/* <MenuItem value="english5000">Top 5000 English Words</MenuItem> */}
+                    </Select>
                 </>
             )}
 
-            <Select
-                value={selectedWordSet}
-                onChange={(e) => setSelectedWordSet(e.target.value)}
-                displayEmpty
-            >
-                <MenuItem value="" disabled>
-                    Select a word set
-                </MenuItem>
-                <MenuItem value="english500">Top 500 English Words</MenuItem>
-                <MenuItem value="english1000">Top 1000 English Words</MenuItem>
-                {/* <MenuItem value="english5000">Top 5000 English Words</MenuItem> */}
-            </Select>
+
 
             <Divider style={{ margin: '20px 0' }}></Divider>
             <Typography gutterBottom>Select number of keys for the chord inputs</Typography>
@@ -254,6 +255,7 @@ function CC1ChordGenerator({ chordLibrary }) {
                         <Button variant="contained" color="secondary" style={{ marginLeft: "10px" }} onClick={() => createCsv(createdChords)}>
                             Download CSV
                         </Button>
+                        <Typography variant="h6">Results</Typography>
                         {
                             (skippedWordCount > 0) && (
                                 <>
@@ -264,10 +266,13 @@ function CC1ChordGenerator({ chordLibrary }) {
                         {
                             (failedWords.length > 0) && (
                                 <>
-                                    <Typography>There were several words where valid chords were not generated: {failedWords.join(', ')}</Typography>
+                                    <Typography>
+                                        {failedWords.length} word{failedWords.length > 1 ? 's' : ''} did not have {failedWords.length === 1 ? 'a' : ''} valid chord{failedWords.length > 1 ? 's ' : ''} generated: {failedWords.join(', ')}
+                                    </Typography>
                                 </>
                             )
                         }
+                        <Typography>{createdChordsArray.length} chords created </Typography>
                         <Table style={{ width: '50%' }}>
                             <TableHead>
                                 <TableRow>
