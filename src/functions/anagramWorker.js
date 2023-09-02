@@ -102,7 +102,7 @@ function findPartialAnagrams(inputString) {
     return resultWithCounts;
 }
 
-export function mainWorkerFunction(e) {
+export function anagramWorkerFunction(e) {
     if (e.data.type === 'computeAnagrams') {
         postMessage({ type: 'progress', progress: 0 });  // Initial progress message
         const result = findPartialAnagrams(e.data.input);
@@ -111,4 +111,4 @@ export function mainWorkerFunction(e) {
 }
 
 // eslint-disable-next-line no-restricted-globals
-self.onmessage = mainWorkerFunction;
+self.onmessage = anagramWorkerFunction;
