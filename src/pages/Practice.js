@@ -11,6 +11,7 @@ function Practice({ chordLibrary }) {
     const [userInput, setUserInput] = useState("");
     const [correctInput, setCorrectInput] = useState(null);
     const [sliderKeyValue, setSliderKeyValue] = useState([2, 10]);
+    const [chordIndexValue, setChordIndexValue] = useState([1,chordLibrary.length]);
     const [filteredChords, setFilteredChords] = useState([]);
     const [chordStats, setChordStats] = useState({});
     const [shouldUpdateChords, setShouldUpdateChords] = useState(true);
@@ -48,6 +49,10 @@ function Practice({ chordLibrary }) {
     const handleKeySliderChange = (event, newValue) => {
         setSliderKeyValue(newValue);
     };
+
+    const handleChordIndexChange = (event, newValue) => {
+        setChordIndexValue(newValue);
+    }
 
     const updateTotalTimePracticed = (time) => {
         const newTotalTime = totalTimePracticed + time;
@@ -148,13 +153,14 @@ function Practice({ chordLibrary }) {
     }, [updateTargetChords]);
 
     useEffect(() => {
-        const newFilteredChords = chordLibrary.filter(chord => {
+        const slicedChordLibrary = chordLibrary.slice(chordIndexValue[0]-1,chordIndexValue[1]);
+        const newFilteredChords = slicedChordLibrary.filter(chord => {
             const chordLength = chord.chordInput.split('+').length;
             return chordLength >= sliderKeyValue[0] && chordLength <= sliderKeyValue[1];
         });
         let validChords = newFilteredChords.filter(isValidChord);
         setFilteredChords(validChords);
-
+        
         if (validChords.length > 0) {
             setShouldUpdateChords(true);
             updateTargetChords();
@@ -163,7 +169,7 @@ function Practice({ chordLibrary }) {
         setCorrectInput(null);
         setChordStats({});
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chordLibrary, sliderKeyValue]);
+    }, [chordLibrary, sliderKeyValue, chordIndexValue]);
 
     useEffect(() => {
         resetState();
@@ -251,9 +257,9 @@ function Practice({ chordLibrary }) {
                         <Grid
                             container
                             direction="row"
-                            spacing={20}
+                            spacing={10}
                         >
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextField
                                     type="number"
                                     label="How long to practice (minutes)"
@@ -269,9 +275,22 @@ function Practice({ chordLibrary }) {
                                     style={{ width: "100%" }}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <Typography>
-                                    Practicing {filteredChords.length} chords with {sliderKeyValue[0]} - {sliderKeyValue[1]} keys
+                                    Choose chords to practice: {chordIndexValue[0]} to {chordIndexValue[1]}
+                                </Typography>
+                                <Slider
+                                    id="chord-index-keys"
+                                    value={chordIndexValue}
+                                    onChange={handleChordIndexChange}
+                                    valueLabelDisplay="auto"
+                                    min={1}
+                                    max={chordLibrary.length}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Typography>
+                                    Filter chords by number of keys: {filteredChords.length} chords have {sliderKeyValue[0]} - {sliderKeyValue[1]} keys
                                 </Typography>
                                 <Slider
                                     id="slider-range-keys"
