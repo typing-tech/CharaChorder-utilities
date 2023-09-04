@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-    TextField, Typography, Grid, Slider, Button,
-    Table, TableBody, TableCell, TableHead, TableRow
-} from '@mui/material';
+import { TextField, Typography, Grid, Slider, Button} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import './Practice.css';
 
 
@@ -16,8 +14,8 @@ function Practice({ chordLibrary }) {
     const [chordStats, setChordStats] = useState({});
     const [shouldUpdateChords, setShouldUpdateChords] = useState(true);
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
-    const [timerSeconds, setTimerSeconds] = useState(2 * 60);
-    const [customTime, setCustomTime] = useState(2);
+    const [timerSeconds, setTimerSeconds] = useState(1 * 60);
+    const [customTime, setCustomTime] = useState(1);
     const [timerActive, setTimerActive] = useState(false);
     const [totalTimePracticed, setTotalTimePracticed] = useState(0);
 
@@ -206,6 +204,34 @@ function Practice({ chordLibrary }) {
         }))
         .sort((a, b) => (b.attempt - b.correct) - (a.attempt - a.correct));
 
+    const columns = [
+        { field: 'chord', headerName: 'Chord', width: 150 },
+        { field: 'attempt', headerName: 'Attempts', type: 'number', width: 150 },
+        { field: 'correct', headerName: 'Correct', type: 'number', width: 150 },
+        {
+            field: 'percentage',
+            headerName: 'Percentage',
+            type: 'number',
+            width: 150,
+            valueFormatter: (params) => {
+                if (params.value == null) {
+                    return '';
+                }
+                return `${params.value.toLocaleString()} %`;
+            } }
+    ];
+
+    const rows = sortedChords.map(({ chord, attempt, correct }, index) => {
+        const percentage = (attempt === 0) ? 0 : ((correct / attempt) * 100).toFixed(0);
+        return {
+            id: index,
+            chord,
+            attempt,
+            correct,
+            percentage
+        };
+    });
+
     const formatTotalTime = (totalSeconds) => {
         const secondsInADay = 86400;
         const secondsInAnHour = 3600;
@@ -368,34 +394,15 @@ function Practice({ chordLibrary }) {
 
                         {timerSeconds <= 0 && (
                             <>
-
                                 <Button variant="contained" onClick={resetState}>Start a new practice session</Button>
-                                <Typography>{sortedChords.length} chords practiced</Typography>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Chord</TableCell>
-                                            <TableCell align="right">Attempts</TableCell>
-                                            <TableCell align="right">Correct</TableCell>
-                                            <TableCell align="right">Percentage</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {sortedChords.map(({ chord, attempt, correct }) => {
-                                            const percentage = (attempt === 0) ? 0 : ((correct / attempt) * 100).toFixed(0);
-                                            return (
-                                                <TableRow key={chord}>
-                                                    <TableCell component="th" scope="row">
-                                                        {chord}
-                                                    </TableCell>
-                                                    <TableCell align="right">{attempt}</TableCell>
-                                                    <TableCell align="right">{correct}</TableCell>
-                                                    <TableCell align="right">{percentage}%</TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
+                                <Typography>{rows.length} chords practiced</Typography>
+                                <div style={{ height: 600, width: '100%' }}>
+                                    <DataGrid 
+                                        rows={rows}
+                                        columns={columns}
+                                        pageSize={5}
+                                    />
+                                </div>
                             </>
                         )}
 

@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, FormControlLabel, Checkbox, Box } from '@mui/material';
+import { Typography, FormControlLabel, Checkbox, Box } from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 function ChordViewer({ chordLibrary = [] }) {
-    const [filterText, setFilterText] = useState('');  
     const [filteredChords, setFilteredChords] = useState(chordLibrary);
     const [showDuplicates, setShowDuplicates] = useState(false);
 
 
     useEffect(() => {
-        const trimmedFilterText = filterText.trim();
-        let filtered = chordLibrary.filter(chord => {
-            const input = chord.chordInput ? chord.chordInput.toLowerCase() : '';
-            const output = chord.chordOutput ? chord.chordOutput.toLowerCase() : '';
-            return input.includes(trimmedFilterText.toLowerCase()) || output.includes(trimmedFilterText.toLowerCase());
-        });
+        let filtered = chordLibrary;
 
         if (showDuplicates) {
             const outputCount = new Map();
@@ -38,60 +33,57 @@ function ChordViewer({ chordLibrary = [] }) {
             });
         }
 
-
-
         setFilteredChords(filtered);
-    }, [chordLibrary, filterText, showDuplicates]);
+    }, [chordLibrary, showDuplicates]);
+
+    const columns = [
+        { field: 'id', headerName: 'Chord Index', width: 100},
+        { field: 'chordInput', headerName: 'Chord Input', flex: 0.5 },
+        { field: 'chordOutput', headerName: 'Chord Output', flex: 1}
+    ];
+
+    const rows = filteredChords.map((chord, index) => ({
+        id: index+1,
+        chordInput: chord.chordInput,
+        chordOutput: chord.chordOutput
+    }));
 
     return (
-        <div>
-            {
-                chordLibrary.length > 0 ? (
-                    <>
-                        <Box display="flex" flexDirection="row" alignItems="center" gap="20px">
-                            <TextField
-                                id="filter"
-                                label="Filter"
-                                variant="outlined"
-                                placeholder="Search chords..."
-                                value={filterText}
-                                onChange={e => setFilterText(e.target.value)}
-                            />
-                            <FormControlLabel  // Checkbox component
-                                control={
-                                    <Checkbox
-                                        checked={showDuplicates}
-                                        onChange={() => setShowDuplicates(!showDuplicates)}
-                                    />
-                                }
-                                label="Show only duplicates"
-                            />
-                        </Box>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Chord Input</TableCell>
-                                    <TableCell>Chord Output</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {filteredChords.map((chord, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{chord.chordInput}</TableCell>
-                                        <TableCell>{chord.chordOutput}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </>
-                ) : (
-                    <Typography variant="h6">
-                        Please load your chord library in settings.
-                    </Typography>
-                )
-            }
-        </div>
+        <>
+            {chordLibrary.length > 0 ? (
+                <>
+                    <Box display="flex" flexDirection="row" alignItems="center" gap="20px">
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={showDuplicates}
+                                    onChange={() => setShowDuplicates(!showDuplicates)}
+                                />
+                            }
+                            label="Show only duplicates"
+                        />
+                    </Box>
+                    <div style={{ height: 600, width: '100%' }}>
+                        <DataGrid 
+                            rows={rows}
+                            columns={columns}
+                            pageSize={5}
+                            slots={{ toolbar: GridToolbar }}
+                            slotProps={{
+                                toolbar: {
+                                    showQuickFilter: true,
+                                },
+                            }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <Typography variant="h6">
+                    Please load your chord library in settings.
+                </Typography>
+            )}
+        </>
     );
-}
+};
 
 export default ChordViewer;
