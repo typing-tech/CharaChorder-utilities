@@ -151,7 +151,7 @@ function Practice({ chordLibrary }) {
     }, [updateTargetChords]);
 
     useEffect(() => {
-        const slicedChordLibrary = chordLibrary.slice(chordIndexValue[0]-1,chordIndexValue[1]);
+        const slicedChordLibrary = chordLibrary.slice(chordIndexValue[0]-1,chordIndexValue[1]-1);
         const newFilteredChords = slicedChordLibrary.filter(chord => {
             const chordLength = chord.chordInput.split('+').length;
             return chordLength >= sliderKeyValue[0] && chordLength <= sliderKeyValue[1];
