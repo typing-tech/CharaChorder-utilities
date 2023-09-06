@@ -42,6 +42,9 @@ function Practice({ chordLibrary }) {
         setCurrentWordIndex(0);
         setTimerSeconds(customTime * 60);
         setTimerActive(false);
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
     };
 
     const handleKeySliderChange = (event, newValue) => {
