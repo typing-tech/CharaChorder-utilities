@@ -43,6 +43,7 @@ function Practice({ chordLibrary }) {
         setTimerSeconds(customTime * 60);
         setTimerActive(false);
         if (inputRef.current) {
+            inputRef.current.disabled = false;
             inputRef.current.focus();
         }
     };
@@ -186,6 +187,9 @@ function Practice({ chordLibrary }) {
                         clearInterval(timerInterval);
                         setTimerActive(false);
                         updateTotalTimePracticed(customTime * 60);
+                        if (inputRef.current) {
+                            inputRef.current.disabled = true;
+                        }
                         return 0;
                     }
                     return prev - 1;
