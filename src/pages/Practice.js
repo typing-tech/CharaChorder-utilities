@@ -72,10 +72,6 @@ function Practice({ chordLibrary }) {
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-        }
-
         if (targetChords?.[0]) {
             let newChordStats = { ...chordStats };
             const firstChordOutput = targetChords[0].chordOutput;
@@ -354,6 +350,7 @@ function Practice({ chordLibrary }) {
                                                         <Typography
                                                             variant="h5"
                                                             style={{ color: index === 0 ? 'green' : 'grey' }}
+                                                            gutterBottom
                                                         >
                                                             {chord?.chordOutput ?? "N/A"}
                                                         </Typography>
