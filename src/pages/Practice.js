@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { TextField, Typography, Grid, Slider, Button} from '@mui/material';
+import { TextField, Typography, Grid, Slider, Button, Dialog, DialogContent, DialogActions} from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { DataGrid } from '@mui/x-data-grid';
 import './Practice.css';
 
@@ -18,6 +21,7 @@ function Practice({ chordLibrary }) {
     const [customTime, setCustomTime] = useState(1);
     const [timerActive, setTimerActive] = useState(false);
     const [totalTimePracticed, setTotalTimePracticed] = useState(0);
+    const [openDialog, setOpenDialog] = React.useState(false);
 
     const inputRef = useRef(null);
 
@@ -70,7 +74,7 @@ function Practice({ chordLibrary }) {
     };
 
     const handleCustomTimeChange = (e) => {
-        const newTime = parseInt(e.target.value, 10);
+        const newTime = parseFloat(e.target.value);
         setCustomTime(newTime);
         setTimerSeconds(newTime * 60);
     };
@@ -146,6 +150,12 @@ function Practice({ chordLibrary }) {
         setShouldUpdateChords(false);
     }, [filteredChords, shouldUpdateChords]);
 
+    const clearTotalTimePracticed = () => {
+        localStorage.removeItem('totalTimePracticed');
+        setTotalTimePracticed(0);
+        handleDialogClose();
+    };
+
     useEffect(() => {
         updateTargetChords();
     }, [updateTargetChords]);
@@ -199,6 +209,15 @@ function Practice({ chordLibrary }) {
         return () => clearInterval(timerInterval);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timerActive]);
+
+    const handleDialogOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleDialogClose = () => {
+        setOpenDialog(false);
+    };
+
 
     const sortedChords = Object.keys(chordStats)
         .map(chord => ({
@@ -275,9 +294,29 @@ function Practice({ chordLibrary }) {
                     </Typography>
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: 'right' }}>
-                    <Typography>
+                    <Typography display="inline">
                         All time statistics: {formattedTime}
                     </Typography>
+                    <IconButton onClick={handleDialogOpen} edge="end">
+                        <DeleteIcon />
+                    </IconButton>
+
+                    <Dialog open={openDialog} onClose={handleDialogClose}>
+                        <DialogContent>
+                            Do you really want to clear all time statistics?
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleDialogClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={clearTotalTimePracticed}
+                                color="primary"
+                            >
+                                Clear
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Grid>
             </Grid>
             {
@@ -296,8 +335,9 @@ function Practice({ chordLibrary }) {
                                     onChange={handleCustomTimeChange}
                                     InputProps={{
                                         inputProps: {
-                                            min: 0,
-                                            max: 60
+                                            min: 0.1,
+                                            max: 60,
+                                            step: 0.1
                                         }
                                     }}
                                     disabled={timerActive}
@@ -379,6 +419,7 @@ function Practice({ chordLibrary }) {
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
                                 label="Your Input"
+                                disabled={timerSeconds===0}
                             />
                             {correctInput && (
                                 <Typography variant="body1" color="error">
@@ -396,7 +437,7 @@ function Practice({ chordLibrary }) {
                             </Typography>
                         )}
 
-                        {timerSeconds <= 0 && (
+                        {timerSeconds <= 0 && rows.length > 0 && (
                             <>
                                 <Button variant="contained" onClick={resetState}>Start a new practice session</Button>
                                 <Typography>{rows.length} chords practiced</Typography>
