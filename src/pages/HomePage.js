@@ -14,6 +14,9 @@ function HomePage() {
             <Typography variant="body1">
                 Explore each of the pages and report any issues on the <a href="https://github.com/typing-tech/CharaChorder-utilities">GitHub Page</a>.
             </Typography>
+            <Typography variant="subtitle" color="error">
+                Disclaimer: This site is not affiliated, associated, authorized, endorsed by, or in any way officially connected with CharaChorder. The official CharaChorder website can be found at <a href="https://www.charachorder.com/">CharaChorder.com</a>.
+            </Typography>
         </div>
     );
 }
