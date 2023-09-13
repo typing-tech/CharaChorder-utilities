@@ -8,7 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import Papa from 'papaparse';
 import { Link } from 'react-router-dom';
 
-const pages = ['Word Tools', 'Chord Tools', 'Practice'];
+const pages = ['Word Tools', 'Chord Tools', 'Practice', 'CCX Debugging'];
 
 function ButtonAppBar({ chordLibrary, setChordLibrary }) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
