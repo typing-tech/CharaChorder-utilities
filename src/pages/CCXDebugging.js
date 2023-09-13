@@ -122,9 +122,9 @@ function CCX() {
                         </ListItem>
                         <ListItem>2: Press and release the letter "a".</ListItem>
                         <ListItem>
-                            3: Next, press "asdfjkl;" (adding one letter at a time) and
-                            then release all at once. It's important to press them in order
-                            (so press a, then press s, and so on until all are pressed then release).
+                            3: Next, press and hold the letter "a", press and hold the letter "s", and keep 
+                            adding one letter at a time until you are pressing and holding all keys in "asdfjkl;" and
+                            then release all at once. Make sure to press the keys in order.
                         </ListItem>
                         <ListItem>4: Press and release the "Left Shift" key.  </ListItem>
                         <ListItem>
