@@ -6,6 +6,7 @@ import ChordTools from './pages/ChordTools';
 import WordTools from './pages/WordTools';
 import Practice from './pages/Practice';
 import HomePage from './pages/HomePage';
+import CCX from './pages/CCXDebugging';
 
 export default function App() {
   const [chordLibrary, setChordLibrary] = React.useState(
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/word-tools" element={<WordTools chordLibrary={chordLibrary} setChordLibrary={setChordLibrary} />} />
             <Route path="/chord-tools" element={<ChordTools chordLibrary={chordLibrary} setChordLibrary={setChordLibrary} />} />
             <Route path="/practice" element={<Practice chordLibrary={chordLibrary} setChordLibrary={setChordLibrary} />} />
+            <Route path="/ccx-debugging" element={<CCX/>} />
           </Routes>
         </Box>
       </Router>
