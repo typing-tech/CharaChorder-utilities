@@ -116,27 +116,35 @@ function CCX() {
                     </Typography>
                     <List>
                         <ListItem>
-                            1: Click "Connect" and use Chrome's serial connection to
+                            1: Unplug your keyboard from the CCX and make sure 
+                            the CCX is plugged into your computer.
+                        </ListItem>
+                        <ListItem>
+                            2: Click "Connect" and use Chrome's serial connection to
                             choose your CCX.  Click "Start Test" (you should see a
                             "VAR") line appear in the Serial Data box.
                         </ListItem>
-                        <ListItem>2: Press and release the letter "a".</ListItem>
                         <ListItem>
-                            3: Next, press and hold the letter "a", press and hold the letter "s", and keep 
+                            3: Plug in your keyboard to the CCX and wait a
+                             couple of seconds before moving to the next step.
+                        </ListItem>
+                        <ListItem>4: Press and release the letter "a".</ListItem>
+                        <ListItem>
+                            5: Next, press and hold the letter "a", press and hold the letter "s", and keep 
                             adding one letter at a time until you are pressing and holding all keys in "asdfjkl;" and
                             then release all at once. Make sure to press the keys in order.
                         </ListItem>
-                        <ListItem>4: Press and release the "Left Shift" key.  </ListItem>
+                        <ListItem>6: Press and release the "Left Shift" key.  </ListItem>
                         <ListItem>
-                            5: Press the "Left Shift" key, press "Left Alt" key,
+                            7: Press the "Left Shift" key, press "Left Alt" key,
                             and then release both.
                         </ListItem>
                         <ListItem>
-                            6: Press the "a" key, press "Left Shift" key, and
+                            8: Press the "a" key, press "Left Shift" key, and
                             then release both.
                         </ListItem>
                         <ListItem>
-                            7: Click Stop Test. The results are copied to your clipboard. You can
+                            9: Click Stop Test. The results are copied to your clipboard. You can
                             send this to your CharaChorder support rep.
                         </ListItem>
                     </List>
