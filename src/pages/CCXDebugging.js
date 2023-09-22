@@ -57,9 +57,11 @@ function CCX() {
         const textDecoder = new TextDecoderStream();
         const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
         const reader = textDecoder.readable.getReader();
-
+        
         while (true) {
             const { value, done } = await reader.read();
+            console.log(value);
+
             if (done) {
                 reader.releaseLock();
                 break;
@@ -71,14 +73,13 @@ function CCX() {
     const toggleTest = async () => {
         if (!isTesting) {
             if (writer) {
-                const dataToSend = "VAR B2 C1 1\r\n";
-                await writer.write(dataToSend);
+                await writer.write("VERSION\r\n");
+                await writer.write("VAR B2 C1 1\r\n");
             }
             setIsTesting(true);
         } else {
             if (writer) {
-                const dataToSend = "VAR B2 C1 0\r\n";
-                await writer.write(dataToSend);
+                await writer.write("VAR B2 C1 0\r\n");
             }
             setIsTesting(false);
             copyToClipboard()
@@ -116,13 +117,16 @@ function CCX() {
                     </Typography>
                     <List>
                         <ListItem>
+                                0: Make sure your CCX is updated to&nbsp;<b>CCOS 1.1.3</b>&nbsp;or a later version. &nbsp;<a href="https://docs.charachorder.com/CharaChorder%20X.html#updating-your-device">Click here for instructions on how to update your device.</a>
+                        </ListItem>
+                        <ListItem>
                             1: Unplug your keyboard from the CCX and make sure 
                             the CCX is plugged into your computer.
                         </ListItem>
                         <ListItem>
                             2: Click "Connect" and use Chrome's serial connection to
                             choose your CCX.  Click "Start Test" (you should see a
-                            "VAR") line appear in the Serial Data box.
+                            "VERSION" and "VAR") line appear in the Serial Data box.
                         </ListItem>
                         <ListItem>
                             3: Plug in your keyboard to the CCX and wait a
